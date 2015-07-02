@@ -1,0 +1,243 @@
+/****************
+******CSS sheet**
+*****************/
+
+
+/*
+	Chess board
+*/
+#main 
+{
+  width: 100%;
+  text-align: center;
+  min-width: 1024px;
+  min-height: 768px;
+}
+
+#main-board
+{
+	height: 680px;
+	width: 680px;
+	vertical-align: middle;
+
+	/*********TO EDIT********/
+	margin: 0 auto; 	
+}
+
+.main-board-cell-black
+{
+	height: 80px;
+	width: 80px;
+	position: relative;
+	vertical-align: middle;
+	display: inline-block;
+	background-color: #302013;
+	color: white;
+  vertical-align: middle;
+
+}
+
+.main-board-drag-cell
+{
+  height: 80px;
+  width: 80px;
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
+
+}
+
+.main-board-cell-white
+{
+	height: 80px;
+	width: 80px;
+	position: relative;
+	vertical-align: middle;
+	display: inline-block;
+	background-color: #F5F5DC;
+}
+
+
+.btnStart 
+{
+    display: inline-block;
+      position: relative;
+      width: 120px;
+      height: 32px;
+      border-radius: 2px;
+      font-size: 0.9em;
+      text-align: center;
+      vertical-align: centre;
+      background-color: #4285f4;
+      color: #fff;
+      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.2s;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    cursor: pointer;
+}
+
+.btnStart:active
+{
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+  transition-delay: 0s;
+}
+
+.container
+{ 
+  font-family:'Roboto';
+  width:600px; 
+  margin:10% auto;
+  display:block; 
+  background:#FFF;
+  padding:10px 50px 50px;
+}
+
+input 				
+{
+  font-size:18px;
+  padding:10px 10px 10px 5px;
+  display:block;
+  width:300px;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus 		
+{ outline:none; }
+
+label 				 
+{
+  color:#999; 
+  font-size:18px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+
+input:focus ~ label, input:valid ~ label 		
+{
+  top:-20px;
+  font-size:14px;
+  color:#5264AE;
+}
+
+.bar 	{ position:relative; display:block; width:300px; }
+.bar:before, .bar:after 	{
+  content:'';
+  height:2px; 
+  width:0;
+  bottom:1px; 
+  position:absolute;
+  background:#4285f4; 
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%; 
+}
+
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+
+.highlight {
+  position:absolute;
+  height:60%; 
+  width:100px; 
+  top:25%; 
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+@-webkit-keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
+
+.group 			  { 
+  position:relative; 
+  margin-bottom:45px; 
+}
+
+
+/*
+**************Classi legate ai titoli******************
+*/
+/*
+  Titolo e sottotiolo
+*/
+#header
+{
+  width: 100%;
+  text-align: center;
+}
+
+#header-title
+{
+	text-shadow: 0px 1px 1px #4d4d4d;
+	color: #222;
+	font: 80px 'LeagueGothicRegular'; 
+  margin: 0 auto;
+}
+
+h2 
+{
+  color: #111;
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 15px;
+  font-weight: 300; 
+  line-height: 32px;
+  margin: 0 auto;
+}
+
+.main
+{
+	   background-color: #9E9E9E; 
+}
+
+/*****************FOOTER*********/
+#footer
+{
+  width: 100%;
+  text-align: center;
+}
+
+#footer-info
+{
+  margin: 0 auto;
+}
+
+#intro-page
+{
+
+   height: 100%;
+   vertical-align: middle;
+
+}
+
+
+
