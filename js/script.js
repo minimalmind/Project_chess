@@ -185,27 +185,7 @@ function gameStart()
 
 	setDrop();
 
-	var timer = setInterval(
-    function () {
-    	
-        $('#main-board').animate({rotate: '+=10deg'}, 0);
-        if (parseInt(($('#main-board').css("rotate")) == 180))
-        {
-        	alert($('#main-board').css("rotate"));
-        	$('#main-board').stop();
-        	stop();
-        	clear(timer);
-        }
 
-    },
-    100
-	);
-	setInterval(
-    function () {
-        $('#d00').animate({rotate: '+=10deg'}, 0);
-    },
-    200
-);
 
 
 
@@ -290,6 +270,9 @@ function setDrop()
 
 						//Updating the dropabble property
 						setDrop();
+
+						//rotate 
+						rotate();
 
 						}
     				}
@@ -744,6 +727,33 @@ function checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyM
 function isOccupied()
 {
 
+}
+
+
+function rotate()
+{
+
+
+
+	//rotate each piece
+
+	var i, j
+	for (i = 0; i < 8; i++)
+	{
+		for (j=0; j<8; j++)
+		{
+			
+	$("d"+i+""+j).stop().animate(
+	  {rotation: 180},
+ 	 {
+  	  duration: 500,
+    step: function(now, fx) {
+      $(this).css({"transform": "rotate("+now+"deg)"});
+    }
+  	}
+	);
+		}
+	}
 }
 
 
