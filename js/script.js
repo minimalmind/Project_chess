@@ -8,6 +8,9 @@ $(document).ready(function()
 
 	//Events 
 	$("#btnStart").click(function(){
+		showIntroPageOptions();
+	});
+	$("#btnStartGame").click(function(){
 		gameStart();
 	});
 
@@ -26,6 +29,7 @@ $(document).ready(function()
 function init()
 {
 	$("#game-page").hide();
+	$("#intro-page-options").hide();
 }
 
 //Dynamic creation of the chess board 
@@ -170,10 +174,16 @@ function asignCellImage(i, j)
 	}
 }
 
+function showIntroPageOptions()
+{
+	$("#intro-page").hide();
+	$("#intro-page-options").show();
+}
+
 //Initialize the game
 function gameStart()
 {
-	$("#intro-page").hide();
+	$("#intro-page-options").hide();
 	$("#game-page").show();
 	$("#header-title").css({'font': '50px Helvetica, Sans-Serif'});
 
@@ -182,13 +192,7 @@ function gameStart()
 
 	//Set the function drag on the chess set
 	setDrag();
-
 	setDrop();
-
-
-
-
-
 }
 
 /********************************************************************************
@@ -572,16 +576,13 @@ function checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 				return true;
 			else if (obstacle != undefined)
 				return false;
-				
-		
-		i++;
-	}
+
+			i++;
+		}
 	}
 	return false;
 }
 
-
-//DOES NOT WORK ):
 function checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
 	var rowSource = parseInt(rowDrag);
@@ -591,18 +592,18 @@ function checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, howMan
 
 	var i=1, obstacle;
 
-	//go up
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource+i)+""+(columnSource-i)).find("img").attr("class"));
-		if ((rowSource == rowDest + i) && (columnSource == columnDest-i) && (obstacle == undefined))
+		obstacle = ($("#d"+(rowSource - i)+""+(columnSource - i)).find("img").attr("class"));
+		if (columnSource == columnDest + i && rowSource == rowDest + i && obstacle == undefined)
+		{
 			return true;
+		}
 		else if (obstacle != undefined)
-			 return false;
-		i++;
+			return false;
+
+			i++;
 	}
-
-
 
 	return false;
 }
@@ -616,16 +617,19 @@ function checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, howMa
 
 	var i=1;
 
-	//go up
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource+i)+""+(columnSource+i)).find("img").attr("class"));
-		if ((rowSource == rowDest + i) && (columnSource == columnDest+i) && (obstacle == undefined))
+		obstacle = ($("#d"+(rowSource - i)+""+(columnSource + i)).find("img").attr("class"));
+		if (columnSource == columnDest - i && rowSource == rowDest + i && obstacle == undefined)
 			return true;
 		else if (obstacle != undefined)
 			return false;
-		i++;
+
+			i++;
 	}
+
+	return false;
+
 }
 
 function checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
@@ -637,17 +641,18 @@ function checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, howM
 
 	var i=1, obstacle;
 
-	i = 1;
-	//go down
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource-i)+""+(columnSource+i)).find("img").attr("class"));
-		if ((rowSource == rowDest - i) && (columnSource == columnDest + i) && (obstacle == undefined))
+		obstacle = ($("#d"+(rowSource + i)+""+(columnSource - i)).find("img").attr("class"));
+		if (columnSource == columnDest + i && rowSource == rowDest - i && obstacle == undefined)
 			return true;
 		else if (obstacle != undefined)
 			return false;
-		i++;
+
+			i++;
 	}
+
+	return false;
 }
 
 function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
@@ -659,22 +664,22 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 
 	var i=1, obstacle;
 
-	i = 1;
-	//go down
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource-i)+""+(columnSource-i)).find("img").attr("class"));
-		//alert(obstacle);
-		if ((rowSource == rowDest - i) && (columnSource == columnDest - i) && (obstacle == undefined))
+		obstacle = ($("#d"+(rowSource + i)+""+(columnSource + i)).find("img").attr("class"));
+		if (columnSource == columnDest - i && rowSource == rowDest - i && obstacle == undefined)
 			return true;
 		else if (obstacle != undefined)
 			return false;
-		i++;
+
+			i++;
 	}
+
+	i = 1;
+
 	return false;
 }
 
-// END DOES NOT WORK :)
 
 function checkVerticalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
@@ -730,11 +735,9 @@ function isOccupied()
 }
 
 
+//TO EDIT
 function rotate()
 {
-
-
-
 	//rotate each piece
 
 	var i, j
