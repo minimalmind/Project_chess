@@ -1,0 +1,8 @@
+Non risolti:
+
+7/6 Cavallo mangia tutti (alleati)
+	Bug nei movimenti di alcuni pezzi (checkO)
+
+
+
+Risolti:

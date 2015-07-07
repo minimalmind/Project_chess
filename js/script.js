@@ -1,9 +1,10 @@
 /**************************************************************
-******Script: developed by: Daniele Genta - Summer 2015********
+******Script - Developed by: Daniele Genta - Summer 2015********
 ***************************************************************/
 
 $(document).ready(function()
 {
+	//Initialize the project
 	init();
 
 	//Events 
@@ -14,15 +15,13 @@ $(document).ready(function()
 		gameStart();
 	});
 
+	//Enter key on name page
 	$( 'form' ).bind('keypress', function(e){
    		if ( e.keyCode == 13 ) {
      		$( this ).find( 'input[type=submit]:first' ).click();
      		alert("Clicca sul bottone per iniziare la partita")
    		}
  	});
-
-
-
 });
 
 //Initialize the page 
@@ -35,8 +34,10 @@ function init()
 //Dynamic creation of the chess board 
 function createBoard()
 {
-	var i, j, mainBoardCell, mainBoardCellClass, colorBlack = false;
-	var mainBoardDragCell, mainBoardDragCellClass;
+	var i, j, mainBoardCell, mainBoardDragCell, mainBoardDragCellClass, mainBoardCellClass, colorBlack;
+
+	//Alternate the colors on the board
+	colorBlack = false;
 
 	mainBoardDragCellClass = "main-board-drag-cell";
 	//Chess board: 8x8
@@ -48,22 +49,10 @@ function createBoard()
     			mainBoardCellClass = "main-board-cell-black";
     		else
     			mainBoardCellClass = "main-board-cell-white";
-
-
-    		//TO EDIT
     		//First coloured layer
-       		mainBoardCell = $('<div />');
-        	mainBoardCell.attr("id",i+""+j);
-        	mainBoardCell.addClass(mainBoardCellClass);
-        	$("#main-board").append(mainBoardCell);
-
-        	//Second transparent layer
-        	mainBoardDragCell = $('<div />');
-        	mainBoardDragCell.attr("id","d"+i+""+j);
-        	mainBoardDragCell.attr("class","middle-layer");
-        	mainBoardDragCell.addClass(mainBoardDragCellClass);
-        	$("#"+i+""+j).append(mainBoardDragCell);
-
+    		createCell("#main-board", mainBoardCellClass, i+""+j);
+    		//Second transparent layer
+    		createCell("#"+i+""+j, mainBoardDragCellClass, "d"+i+""+j);
         	asignCellImage(i,j);
         	colorBlack = !colorBlack;
 		}
@@ -71,7 +60,19 @@ function createBoard()
     }
 }
 
-//Asingn the right images to the cells (note: there is a layer between the coloured div and the image)
+//Create a cell of the board dinamically
+function createCell(cellAppendTo, cellClass, id)
+{
+	var cell;
+
+	cell = $('<div />');
+    cell.attr("id",id);
+    cell.addClass(cellClass);
+    $(cellAppendTo).append(cell);
+
+}
+
+//Asign the right image to the cells (note: there is a layer between the coloured div and the image)
 function asignCellImage(i, j)
 {
 	//Using the class to recognize the images - no difference between black and white queens and kings (same moves)
@@ -82,8 +83,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","black-pawn");
 		$("#d"+i+""+j).find("img").attr("value","black");
 	}
-		
-
 	//white pawns
 	if (i==6)
 	{
@@ -91,7 +90,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","white-pawn");
 		$("#d"+i+""+j).find("img").attr("value","white");
 	}
-
 	//black towers
 	if (i == 0 && (j==0 || j==7))
 	{
@@ -99,7 +97,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","tower");
 		$("#d"+i+""+j).find("img").attr("value","black");
 	}
-		
 	//white towers
 	if (i == 7 && (j == 0 || j == 7))
 	{	
@@ -107,7 +104,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","tower");
 		$("#d"+i+""+j).find("img").attr("value","white");
 	}
-
 	//white horses
 	if (i == 7 && (j == 1 || j == 6))
 	{
@@ -115,15 +111,13 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","horse");
 		$("#d"+i+""+j).find("img").attr("value","white");
 	}
-
 	//black horses
 	if (i == 0 && (j == 1 || j == 6))
 	{
-		$("#d"+i+""+j).html('<img src="images/set/white-horse.png">');
+		$("#d"+i+""+j).html('<img src="images/set/black-horse.png">');
 		$("#d"+i+""+j).find("img").attr("class","horse");
 		$("#d"+i+""+j).find("img").attr("value","black");
 	}
-
 	//black bishops
 	if (i == 0 && (j == 2 || j == 5))
 	{
@@ -131,7 +125,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","bishop");
 		$("#d"+i+""+j).find("img").attr("value","black");
 	}
-
 	//white bishops
 	if (i == 7 && (j == 2 || j == 5))
 	{
@@ -139,7 +132,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","bishop");
 		$("#d"+i+""+j).find("img").attr("value","white");
 	}
-
 	//kings
 	if ((i == 0 || i == 7) && j== 4)
 	{
@@ -156,7 +148,6 @@ function asignCellImage(i, j)
 		$("#d"+i+""+j).find("img").attr("class","king");
 
 	}
-
 	//queens
 	if ((i == 0 || i == 7) && j== 3)
 	{
@@ -225,42 +216,26 @@ function setDrop()
 	{
 		for (j=0; j<8; j++)
 		{
-			//Check if the cell is empty (doesn't contain an img)
-			count = $('#'+i+""+j).find('img').length;
-			if (count == 0)
-			{
 				$( "#d"+i+""+j).droppable({
 			    	drop: function( event, ui ) {
-
 			    		//Saving the useful ID (Drop, Drag and parent drag)
 			    		idDrop=$(this).parent().attr("id");	
 			    		idDrag=ui.draggable.attr("id");
 			    		pIdDrag = ui.draggable.parent().attr("id");;
-
 			    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
 			    		if (allowDrop == true)
 			    		{
-			    		
-
 			    		//Removing the drop middle layer and adding the new layer with the image
 			    		$( "#"+idDrop ).children().remove();
-
-
 			    		$( "#"+idDrag).css("top","");
 						$( "#"+idDrag).css("left","");
 						$( "#"+idDrag).css("margin-top","");
 						$( "#"+idDrag).css("margin-left","");	
-
 			    		$("#"+idDrop).append($("#"+idDrag));
-			    		
-
 						//Updating the id    	
 						var oldIdDrag = idDrag;			
 						$( "#"+idDrag ).attr("id","d"+idDrop);
 						$(oldIdDrag).parent().attr("id", oldIdDrag);
-
-	
-
 						//TO EDIT
 						//Restore old drag father middle layer
 						supportCellClass = "main-board-drag-cell";
@@ -269,19 +244,11 @@ function setDrop()
         				supportCell.attr("class","middle-layer");
         				supportCell.addClass(supportCellClass);
 						$("#"+pIdDrag).append(supportCell);
-
-						
-
 						//Updating the dropabble property
 						setDrop();
-
-						//rotate 
-						rotate();
-
 						}
     				}
   				});
-			}
 		}
 	}
 }
@@ -326,14 +293,9 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 	allowDrop = false;
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
-
-	//The pieces only move vertically
-	if (columnDrop == columnDrag)
-		{
 			//If is the 1st move (can move 2 cells)
 			if (rowDrag == "6")
 			{
-				
 				nMoves = 2;
 				if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
@@ -344,8 +306,12 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 				nMoves = 1;
 				if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
+				else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
+					
+				else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
 			}
-		}
 		return allowDrop;
 }
 
@@ -368,6 +334,10 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 			{
 				nMoves = 1;
 				if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
+				if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
+				if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
 			}
 		return allowDrop;
@@ -427,13 +397,9 @@ function checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 	nMoves = 8;
 
 	if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-	{
 		allowDrop = true;
-	}
 	else if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-	{
 		allowDrop = true;
-	}
 	else if (checkMoveLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
@@ -445,10 +411,7 @@ function checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 function checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 {
 	allowDrop = false;
-
 	nMoves = 8;
-
-
 	if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
@@ -472,16 +435,11 @@ function checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 {
 	allowDrop = false;
-
 	nMoves = 4;
 	if (checkVerticalHorse(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-	{
 		allowDrop = true;
-	}
 	else if (checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-	{
 		allowDrop = true;
-	}
 	return allowDrop;
 }
 
@@ -489,28 +447,39 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 ********* Functions which help with the generic moves (each piece use these functions)
 *************************************************************************************/
 
-
-//Editing obstacles, mine or other
+//************************Make a common function for the code repeated!!!!!!!!!!!!!
 function checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
-
-	//console.log(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves);
-
 	var i=1;
 
-	var obstacle;
+	var obstacleValue, obstacleClass, myValue;
 	if (columnDrop == columnDrag)
 	{
 		while (i <= howManyMoves)
 		{
-			obstacle = ($("#d"+(rowSource-i)+""+columnDrag).find("img").attr("class"));
-			if (rowSource == rowDest+i && obstacle == undefined)
-				return true;
-			if (obstacle != undefined)
-				return false;
-			i++;
+			obstacleValue = ($("#d"+(rowSource-i)+""+columnDrag).find("img").attr("value"));
+			obstacleClass = ($("#d"+(rowSource-i)+""+columnDrag).find("img").attr("value"));
+			myValue = ($("#d"+(rowSource)+""+(columnDrag)).find("img").attr("value"));
+			if (obstacleValue == myValue || obstacleValue == undefined)
+			{
+				if (rowSource == rowDest+i && obstacleValue == undefined)
+					return true;
+				if (obstacleValue != undefined)
+					return false;
+				i++;
+			}
+			else if (obstacleValue != undefined)
+			{
+				if (rowSource == rowDest+i && obstacleClass != "black-pawn" && obstacleClass != "white-pawn" )
+				{
+					capturePiece();
+					return true;
+				}
+				else
+					return false;
+			}
 		}
 	}
 	return false;
@@ -521,18 +490,36 @@ function checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
 
-	var i=1, obstacle;
+	var i, obstacleValue, myValue;
+
+	i = 1;
 
 	if (columnDrop == columnDrag)
 	{
 		while (i <= howManyMoves)
 		{
-			obstacle = ($("#d"+(rowSource+i)+""+columnDrag).find("img").attr("class"));
-			if (rowSource == rowDest-i && obstacle == undefined)
-				return true;
-			if (obstacle != undefined)
-				return false;
-			i++;
+			obstacleValue = ($("#d"+(rowSource+i)+""+columnDrag).find("img").attr("value"));
+			myValue = ($("#d"+(rowSource)+""+(columnDrag)).find("img").attr("value"));
+
+			if (obstacleValue == myValue || obstacleValue == undefined)
+			{
+				if (rowSource == rowDest-i && obstacleValue == undefined)
+					return true;
+				if (obstacleValue != undefined)
+					return false;
+				i++;
+			}
+			else if (obstacleValue != undefined)
+			{
+				if (rowSource == rowDest-i && $("#d"+(rowSource-i)+""+columnDrag).find("img").attr("class") != "black-pawn" && $("#d"+(rowSource-i)+""+columnDrag).find("img").attr("class") != "white-pawn" )
+				{
+					capturePiece();
+					return true;
+				}
+				else
+					return false;
+			}
+
 		}
 	}
 	return false;
@@ -544,17 +531,32 @@ function checkMoveLeft(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 	var columnDest = parseInt(columnDrop);
 
 	i = 1
-	var obstacle;
+	var obstacleValue, myValue;
 		if (rowDrag == rowDrop)
 		{
 			while (i <= howManyMoves)
 			{
-				obstacle = ($("#d"+(rowDrag)+""+(columnSource+i)).find("img").attr("class"));
-				if (columnSource == columnDest-i && obstacle == undefined)
-					return true;
-				else if (obstacle != undefined)
-					return false;
-				i++;
+				obstacleValue = ($("#d"+(rowDrag)+""+(columnSource+i)).find("img").attr("value"));
+				myValue = ($("#d"+(rowDrag)+""+(columnSource)).find("img").attr("value"));
+
+				if (obstacleValue == myValue || obstacleValue == undefined)
+				{
+					if (columnSource == columnDest-i && obstacleValue == undefined)
+						return true;
+					else if (obstacleValue != undefined)
+						return false;
+					i++;
+				}
+				else if (obstacleValue != undefined)
+				{
+					if (columnSource == columnDest - i)
+					{
+						capturePiece();
+						return true;
+					}
+					else
+						return false;
+				}
 			}
 		}
 	return false;
@@ -566,18 +568,33 @@ function checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 	var columnDest = parseInt(columnDrop);
 
 	i = 1;
-	var obstacle;
+	var obstacleValue, myValue;
 	if (rowDrag == rowDrop)
 	{
 		while (i <= howManyMoves)
 		{
-			obstacle = ($("#d"+(rowDrag)+""+(columnSource-i)).find("img").attr("class"));
-			if (columnSource == columnDest+i && obstacle == undefined)
-				return true;
-			else if (obstacle != undefined)
-				return false;
+			obstacleValue = ($("#d"+(rowDrag)+""+(columnSource-i)).find("img").attr("value"));
+			myValue = ($("#d"+(rowDrag)+""+(columnSource)).find("img").attr("value"));
 
-			i++;
+			if (obstacleValue == myValue || obstacleValue == undefined)
+			{
+				if (columnSource == columnDest+i && obstacleValue == undefined)
+					return true;
+				else if (obstacleValue != undefined)
+					return false;
+
+				i++;
+			}
+			else if (obstacleValue != undefined)
+			{
+				if (columnSource == columnDest + i)
+				{
+					capturePiece();
+					return true;
+				}
+				else
+					return false;
+			}
 		}
 	}
 	return false;
@@ -590,21 +607,39 @@ function checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, howMan
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
 
-	var i=1, obstacle;
+	var i, obstacleValue, myValue;
+
+	i = 1;
 
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource - i)+""+(columnSource - i)).find("img").attr("class"));
-		if (columnSource == columnDest + i && rowSource == rowDest + i && obstacle == undefined)
+		obstacleValue = ($("#d"+(rowSource - i)+""+(columnSource - i)).find("img").attr("value"));
+		obstacleClass = ($("#d"+(rowSource - i)+""+(columnSource - i)).find("img").attr("class"));
+		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+
+		if (obstacleValue == myValue || obstacleValue == undefined)
 		{
-			return true;
+			
+			if (obstacleClass != "white-pawn" && obstacleClass != "black-pawn")
+			{
+				if (columnSource == columnDest + i && rowSource == rowDest + i && obstacleValue == undefined)
+					return true;
+				else if (obstacleValue != undefined)
+					return false;
+				i++;
+			}
 		}
-		else if (obstacle != undefined)
-			return false;
-
-			i++;
+		else if (obstacleValue != undefined)
+		{
+			if (columnSource == columnDest + i && rowSource == rowDest + i)
+			{
+				capturePiece();
+				return true;
+			}
+			else
+				return false;
+		}
 	}
-
 	return false;
 }
 
@@ -615,19 +650,34 @@ function checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, howMa
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
 
-	var i=1;
+	var i, obstacleValue, myValue;
+
+	i = 1;
 
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource - i)+""+(columnSource + i)).find("img").attr("class"));
-		if (columnSource == columnDest - i && rowSource == rowDest + i && obstacle == undefined)
-			return true;
-		else if (obstacle != undefined)
-			return false;
+		obstacleValue = ($("#d"+(rowSource - i)+""+(columnSource + i)).find("img").attr("value"));
+		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+		if (obstacleValue == myValue || obstacleValue == undefined)
+		{
+			if (columnSource == columnDest - i && rowSource == rowDest + i && obstacleValue == undefined)
+				return true;
+			else if (obstacleValue != undefined)
+				return false;
 
 			i++;
+		}
+		else if (obstacleValue != undefined)
+		{
+			if (columnSource == columnDest - i && rowSource == rowDest + i)
+			{
+				capturePiece();
+				return true;
+			}
+			else
+				return false;
+		}
 	}
-
 	return false;
 
 }
@@ -639,19 +689,34 @@ function checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, howM
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
 
-	var i=1, obstacle;
+	var i, obstacleValue, myValue;
+
+	i = 1;
 
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource + i)+""+(columnSource - i)).find("img").attr("class"));
-		if (columnSource == columnDest + i && rowSource == rowDest - i && obstacle == undefined)
-			return true;
-		else if (obstacle != undefined)
-			return false;
+		obstacleValue = ($("#d"+(rowSource + i)+""+(columnSource - i)).find("img").attr("value"));
 
-			i++;
+		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+		if (obstacleValue == myValue || obstacleValue == undefined)
+		{
+			if (columnSource == columnDest + i && rowSource == rowDest - i && obstacleValue == undefined)
+				return true;
+			else if (obstacleValue != undefined)
+				return false;
+				i++;
+		}
+		else if (obstacleValue != undefined)
+		{
+			if (columnSource == columnDest + i && rowSource == rowDest - i)
+			{
+				capturePiece();
+				return true;
+			}
+			else
+				return false;
+		}
 	}
-
 	return false;
 }
 
@@ -661,47 +726,72 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
-
-	var i=1, obstacle;
-
+	var i=1, obstacleValue, myValue;
 	while (i <= howManyMoves)
 	{
-		obstacle = ($("#d"+(rowSource + i)+""+(columnSource + i)).find("img").attr("class"));
-		if (columnSource == columnDest - i && rowSource == rowDest - i && obstacle == undefined)
-			return true;
-		else if (obstacle != undefined)
-			return false;
+		obstacleValue = ($("#d"+(rowSource + i)+""+(columnSource + i)).find("img").attr("value"));
+		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+		if (obstacleValue == myValue  || obstacleValue == undefined)
+		{
+			if (columnSource == columnDest - i && rowSource == rowDest - i && obstacleValue == undefined)
+				return true;
+			else if (obstacleValue != undefined)
+				return false;
 
 			i++;
+		}
+		else if (obstacleValue != undefined)
+		{
+			if (columnSource == columnDest - i && rowSource == rowDest - i)
+			{
+				capturePiece();
+				return true;
+			}
+			else
+				return false;
+		}
 	}
-
-	i = 1;
-
 	return false;
 }
 
+/**
+*******************OSTACOLI CAVALLI*****************************
+*/
 
+//TO EDIT!
 function checkVerticalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
-
 	//1 UP LEFT
-	if ((rowSource == rowDest+2) && (columnSource == columnDest+1))
+	if (minimizeHorse(2,1,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//2 UP RIGHT
-	if ((rowSource == rowDest+2) && (columnSource == columnDest-1))
+	if (minimizeHorse(2,-1,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//1 DOWN LEFT
-	if ((rowSource == rowDest-2) && (columnSource == columnDest+1))
+	if (minimizeHorse(-2,1,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//2 DOWN RIGHT
-	if ((rowSource == rowDest-2) && (columnSource == columnDest-1))
+	if (minimizeHorse(-2,-1,rowSource, rowDest, columnSource, columnDest))
 		return true;
 
+	return false;
+}
 
+
+function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource, columnDest)
+{
+	var obstacleValue = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("value"));
+	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+
+	if (obstacleValue == myValue)
+		return false;
+	else if ((rowSource == rowDest+deltaRows) && (columnSource == columnDest + deltaColumns))
+		return true;
+	return false;
 }
 
 function checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
@@ -710,54 +800,28 @@ function checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyM
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
+
 	//1 UP LEFT
-	if ((rowSource == rowDest+1) && (columnSource == columnDest+2))
+	if (minimizeHorse(1,2,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//2 UP RIGHT
-	if ((rowSource == rowDest+1) && (columnSource == columnDest-2))
+	if (minimizeHorse(1,-2,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//1 DOWN LEFT
-	if ((rowSource == rowDest-1) && (columnSource == columnDest+2))
+	if (minimizeHorse(-1,2,rowSource, rowDest, columnSource, columnDest))
 		return true;
 	//2 DOWN RIGHT
-	if ((rowSource == rowDest-1) && (columnSource == columnDest-2))
+	if (minimizeHorse(-1,-2,rowSource, rowDest, columnSource, columnDest))
 		return true;
+
+	return false;
 }
 
-
-
-
-
-//Check if the cell has a piece or not
-function isOccupied()
+function capturePiece()
 {
-
+	alert("capturing piece!");
 }
 
-
-//TO EDIT
-function rotate()
-{
-	//rotate each piece
-
-	var i, j
-	for (i = 0; i < 8; i++)
-	{
-		for (j=0; j<8; j++)
-		{
-			
-	$("d"+i+""+j).stop().animate(
-	  {rotation: 180},
- 	 {
-  	  duration: 500,
-    step: function(now, fx) {
-      $(this).css({"transform": "rotate("+now+"deg)"});
-    }
-  	}
-	);
-		}
-	}
-}
 
 
 
