@@ -436,10 +436,10 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 {
 	allowDrop = false;
 	nMoves = 4;
-	if (checkVerticalHorse(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+
+	if (checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
-	else if (checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-		allowDrop = true;
+
 	return allowDrop;
 }
 
@@ -448,6 +448,23 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 *************************************************************************************/
 
 //************************Make a common function for the code repeated!!!!!!!!!!!!!
+//Unify up & down, left & right
+
+
+//Func
+function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
+{
+	var rowSource = parseInt(rowDrag);
+	var rowDest = parseInt(rowDrop);
+	var columnSource = parseInt(columnDrag);
+	var columnDest = parseInt(columnDrop);
+
+
+
+}
+
+
+
 function checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
 	var rowSource = parseInt(rowDrag);
@@ -754,33 +771,36 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 	return false;
 }
 
-/**
-*******************OSTACOLI CAVALLI*****************************
-*/
 
-//TO EDIT!
-function checkVerticalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
-{
+/**********************************END TO EDIT*************************************/
+
+
+
+function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
+{	
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
-	//1 UP LEFT
-	if (minimizeHorse(2,1,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//2 UP RIGHT
-	if (minimizeHorse(2,-1,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//1 DOWN LEFT
-	if (minimizeHorse(-2,1,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//2 DOWN RIGHT
-	if (minimizeHorse(-2,-1,rowSource, rowDest, columnSource, columnDest))
-		return true;
+
+	var r, c;
+
+	//Each combination of the horse moves have a deltaR and a deltaC between -2 and 2
+	for (r = -2; r <= 2; r++)
+	{
+		for (c = -2; c <= 2; c++)
+		{
+			if (r != 0 && c != 0)
+			{
+				if (minimizeHorse(r, c, rowSource, rowDest, columnSource, columnDest))
+					return true;
+			}
+		}
+	}
 
 	return false;
-}
 
+}
 
 function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource, columnDest)
 {
@@ -794,29 +814,7 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 	return false;
 }
 
-function checkHorizontalHorse(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
-{
-	var rowSource = parseInt(rowDrag);
-	var rowDest = parseInt(rowDrop);
-	var columnSource = parseInt(columnDrag);
-	var columnDest = parseInt(columnDrop);
-
-	//1 UP LEFT
-	if (minimizeHorse(1,2,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//2 UP RIGHT
-	if (minimizeHorse(1,-2,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//1 DOWN LEFT
-	if (minimizeHorse(-1,2,rowSource, rowDest, columnSource, columnDest))
-		return true;
-	//2 DOWN RIGHT
-	if (minimizeHorse(-1,-2,rowSource, rowDest, columnSource, columnDest))
-		return true;
-
-	return false;
-}
-
+/**/
 function capturePiece()
 {
 	alert("capturing piece!");
