@@ -288,6 +288,7 @@ function checkPiece(allowDrop, idDrag, idDrop)
 }	
 
 //Allow the drop of a white pawn
+//to optimize
 function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //TO EDIT
 {
 	allowDrop = false;
@@ -297,18 +298,24 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 			if (rowDrag == "6")
 			{
 				nMoves = 2;
-				if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+					allowDrop = true;
+				else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
+				else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
 			}
 			//if it isn't the 1st move
 			else
 			{
 				nMoves = 1;
-				if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
 					allowDrop = true;
+				//Check for the capturing
 				else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
-					
 				else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
 			}
@@ -316,6 +323,7 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 }
 
 //Allow the drop of a white pawn
+//to edit
 function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //TO EDIT
 {
 	allowDrop = false;
@@ -326,14 +334,22 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 			if (rowDrag == "1")
 			{
 				nMoves = 2;
-				if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				//if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					//allowDrop = true;
+				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+					allowDrop = true;
+				if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					allowDrop = true;
+				if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
 			}
 			//if it isn't the 1st move
 			else
 			{
 				nMoves = 1;
-				if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+				//if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+					//allowDrop = true;
+				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
 					allowDrop = true;
 				if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 					allowDrop = true;
@@ -351,14 +367,18 @@ function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //
 	nMoves = 1;
 
 
-	if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+	/*if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+		allowDrop = true;*/
+
+	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true))
 		allowDrop = true;
+
 	if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
@@ -396,13 +416,16 @@ function checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 
 	nMoves = 8;
 
-	if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+	/*if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+		allowDrop = true;*/
+
+	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, false, false))
 		allowDrop = true;
 
 	return allowDrop;
@@ -412,13 +435,15 @@ function checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 {
 	allowDrop = false;
 	nMoves = 8;
-	if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+	/*if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 	else if (checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+		allowDrop = true;*/
+	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true))
 		allowDrop = true;
 	if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
@@ -451,20 +476,90 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 //Unify up & down, left & right
 
 
-//Func
-function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
+//Function that unify UP, DOWN, LEFT and RIGHT checking moves
+function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canGoUp, canGoDown, canGoLeft, canGoRight)
 {
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
 
+	var i, obstacleClass, obstacleValue;
+	
+	//find my color
+	myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 
 
+	//all the pieces calling this functions can go up
+	if (canGoUp)
+	{
+		if (isObstacolated())
+			return false;
+		else
+		{
+			if (checkDestination())
+				return true;
+		}
+		if (canGoDown)
+		{
+			if (isObstacolated())
+				return false;
+			else
+			{
+				if (checkDestination())
+					return true;
+			}
+			if (canGoLeft)
+			{
+				if (isObstacolated())
+					return false;
+				else
+				{
+					if (checkDestination())
+						return true;
+				}
+				if (canGoRight)
+				{
+					if (isObstacolated())
+						return false;
+					else
+					{
+						if (checkDestination())
+							return true;
+					}
+				}
+			}
+		}
+	}
+	//Safety
+	return false;
+}
+
+function isObstacolated(obstacleClass, obstacleValue)
+{
+	/*
+	find ob class
+	find my class
+	check...
+	*/
+	return false;
+}
+
+function checkDestination()
+{
+	/*
+	check the move
+	move on the empty cell
+	move on a full cell
+	*/
 }
 
 
+/**********************************************************************************
+*****************/
 
+
+/*
 function checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
 	var rowSource = parseInt(rowDrag);
@@ -616,6 +711,7 @@ function checkMoveRight(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 	}
 	return false;
 }
+*/
 
 function checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {
@@ -771,11 +867,7 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 	return false;
 }
 
-
 /**********************************END TO EDIT*************************************/
-
-
-
 function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {	
 	var rowSource = parseInt(rowDrag);
