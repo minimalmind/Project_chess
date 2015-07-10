@@ -457,7 +457,8 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 	var columnDest = parseInt(columnDrop);
 	
 	//find my color
-	myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+	var myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 	i = 1;
 	safetyReturn = true;
 
@@ -469,7 +470,7 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 		
 		if (canGoUp && (columnSource == columnDest) && rowSource > rowDest)
 		{
-			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "up", i))
+			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "up", i, myClass))
 				safetyReturn = false;
 			else
 			{
@@ -480,7 +481,7 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 
 		if (canGoDown && (columnSource == columnDest) && rowSource < rowDest)
 		{
-			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "down", i))
+			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "down", i, myClass))
 				safetyReturn = false;
 			else
 			{
@@ -491,7 +492,7 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 
 		if (canGoLeft && (rowSource == rowDest) && columnSource > columnDest)
 		{
-			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "left", i))
+			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "left", i, myClass))
 				safetyReturn = false;
 			else
 			{
@@ -502,7 +503,7 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 
 		if (canGoRight && (rowSource == rowDest) && columnSource < columnDest)
 		{
-			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "right", i))
+			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "right", i, myClass))
 				safetyReturn = false;
 			else
 			{
@@ -519,39 +520,36 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 	return false;
 }
 
-function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, destination, delta)
+function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, destination, delta, myClass)
 {
 	var obstacleValue, obstacleClass;
 
 		switch (destination)
 		{
 			case "up":
-				if (supportObstacle((rowSource - delta), columnSource, rowDest, columnDest, myValue))
+				if (supportObstacle((rowSource - delta), columnSource, rowDest, columnDest, myValue, myClass))
 					return true;
 				break;
 			case "down":
-				if (supportObstacle((rowSource + delta), columnSource, rowDest, columnDest, myValue))
+				if (supportObstacle((rowSource + delta), columnSource, rowDest, columnDest, myValue, myClass))
 					return true;
 				break;
 			case "left":
-				if (supportObstacle(rowSource, (columnSource - delta), rowDest, columnDest, myValue))
+				if (supportObstacle(rowSource, (columnSource - delta), rowDest, columnDest, myValue, myClass))
 					return true;
 				break;
 			case "right":
-				if (supportObstacle(rowSource, (columnSource + delta), rowDest, columnDest, myValue))
+				if (supportObstacle(rowSource, (columnSource + delta), rowDest, columnDest, myValue, myClass))
 					return true;
 				break;
 		}
 	return false;
 }
 
-function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myValue)
+function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass)
 {
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+columnObstacle).find("img").attr("class"));
-
-	console.log(obstacleValue + "-"+ myValue + "-" + rowObstacle + "-"+rowDest);
-
 
 		if (obstacleValue == myValue)
 		{
@@ -559,8 +557,11 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 			alert("there is an obstacle!");				
 			return true;
 		}
-		else
-			return false;
+		if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
+			return true;
+
+
+		return false;
 }
 
 function checkDestination(rowSource, rowDest, columnSource, columnDest, destination, delta)
@@ -591,7 +592,6 @@ function supportDestination(rowNow, columnNow, rowDest, columnDest)
 {
 	if (rowNow == rowDest && columnNow == columnDest)
 	{
-		console.log("support dest: "+rowNow +"-"+rowDest+" / "+columnNow+"-"+columnDest)
 		return true;
 	}
 		
@@ -621,15 +621,11 @@ function checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, howMan
 
 		if (obstacleValue == myValue || obstacleValue == undefined)
 		{
-			
-			if (myClass != "white-pawn" && myClass != "black-pawn")
-			{
-				if (columnSource == columnDest + i && rowSource == rowDest + i && obstacleValue == undefined)
+				if (columnSource == columnDest + i && rowSource == rowDest + i && obstacleValue == undefined && myClass != "white-pawn")
 					return true;
 				else if (obstacleValue != undefined)
 					return false;
 				i++;
-			}
 		}
 		else if (obstacleValue != undefined)
 		{
@@ -660,17 +656,18 @@ function checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, howMa
 	{
 		obstacleValue = ($("#d"+(rowSource - i)+""+(columnSource + i)).find("img").attr("value"));
 		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+		myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 		if (obstacleValue == myValue || obstacleValue == undefined)
 		{
-			if (columnSource == columnDest - i && rowSource == rowDest + i && obstacleValue == undefined)
-				return true;
-			else if (obstacleValue != undefined)
-				return false;
-
-			i++;
+				if (columnSource == columnDest - i && rowSource == rowDest + i && obstacleValue == undefined && myClass != "black-pawn")
+					return true;
+				else if (obstacleValue != undefined)
+					return false;
+				i++;
 		}
 		else if (obstacleValue != undefined)
 		{
+			alert(myClass);
 			if (columnSource == columnDest - i && rowSource == rowDest + i)
 			{
 				capturePiece();
@@ -697,15 +694,15 @@ function checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, howM
 	while (i <= howManyMoves)
 	{
 		obstacleValue = ($("#d"+(rowSource + i)+""+(columnSource - i)).find("img").attr("value"));
-
+		myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 		if (obstacleValue == myValue || obstacleValue == undefined)
 		{
-			if (columnSource == columnDest + i && rowSource == rowDest - i && obstacleValue == undefined)
-				return true;
-			else if (obstacleValue != undefined)
-				return false;
-				i++;
+				if (columnSource == columnDest + i && rowSource == rowDest - i && obstacleValue == undefined)
+					return true;
+				else if (obstacleValue != undefined)
+					return false;
+					i++;
 		}
 		else if (obstacleValue != undefined)
 		{
@@ -732,14 +729,14 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 	{
 		obstacleValue = ($("#d"+(rowSource + i)+""+(columnSource + i)).find("img").attr("value"));
 		myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+		myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 		if (obstacleValue == myValue  || obstacleValue == undefined)
 		{
-			if (columnSource == columnDest - i && rowSource == rowDest - i && obstacleValue == undefined)
-				return true;
-			else if (obstacleValue != undefined)
-				return false;
-
-			i++;
+				if (columnSource == columnDest - i && rowSource == rowDest - i && obstacleValue == undefined)
+					return true;
+				else if (obstacleValue != undefined)
+					return false;
+				i++;
 		}
 		else if (obstacleValue != undefined)
 		{
