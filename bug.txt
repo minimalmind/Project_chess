@@ -1,8 +1,10 @@
 Non risolti:
 
-7/6 Cavallo mangia tutti (alleati)
-	Bug nei movimenti di alcuni pezzi (checkO)
+10/7   	Movimento obliquo nei pedoni, catturano all’indietro
+
 
 
 
 Risolti:
+	7/7 Cavallo mangia tutti (alleati)
+	Bug nei movimenti di alcuni pezzi (checkO)
