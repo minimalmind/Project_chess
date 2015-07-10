@@ -53,7 +53,7 @@ function createBoard()
     		createCell("#main-board", mainBoardCellClass, i+""+j);
     		//Second transparent layer
     		createCell("#"+i+""+j, mainBoardDragCellClass, "d"+i+""+j);
-        	asignCellImage(i,j);
+        	asignCellImageO(i,j);
         	colorBlack = !colorBlack;
 		}
 		colorBlack = !colorBlack;
@@ -72,97 +72,61 @@ function createCell(cellAppendTo, cellClass, id)
 
 }
 
-//Asign the right image to the cells (note: there is a layer between the coloured div and the image)
-function asignCellImage(i, j)
+//First function used to switch the position of the piece i am going to show
+function asignCellImageO(i, j)
 {
-	//Using the class to recognize the images - no difference between black and white queens and kings (same moves)
+		//Using the class to recognize the images - no difference between black and white queens and kings (same moves)
 	//black pawns
 	if (i==1)
-	{
-		$("#d"+i+""+j).html('<img src="images/set/black-pawn.png">');
-		$("#d"+i+""+j).find("img").attr("class","black-pawn");
-		$("#d"+i+""+j).find("img").attr("value","black");
-	}
+		supportAsignCellImage(i, j, "black", "pawn");
 	//white pawns
 	if (i==6)
-	{
-		$("#d"+i+""+j).html('<img src="images/set/white-pawn.png">');
-		$("#d"+i+""+j).find("img").attr("class","white-pawn");
-		$("#d"+i+""+j).find("img").attr("value","white");
-	}
+		supportAsignCellImage(i, j, "white", "pawn");
 	//black towers
 	if (i == 0 && (j==0 || j==7))
-	{
-		$("#d"+i+""+j).html('<img src="images/set/black-tower.png">');
-		$("#d"+i+""+j).find("img").attr("class","tower");
-		$("#d"+i+""+j).find("img").attr("value","black");
-	}
+		supportAsignCellImage(i, j, "black", "tower");
 	//white towers
 	if (i == 7 && (j == 0 || j == 7))
-	{	
-		$("#d"+i+""+j).html('<img src="images/set/white-tower.png">');
-		$("#d"+i+""+j).find("img").attr("class","tower");
-		$("#d"+i+""+j).find("img").attr("value","white");
-	}
+		supportAsignCellImage(i, j, "white", "tower");
 	//white horses
 	if (i == 7 && (j == 1 || j == 6))
-	{
-		$("#d"+i+""+j).html('<img src="images/set/white-horse.png">');
-		$("#d"+i+""+j).find("img").attr("class","horse");
-		$("#d"+i+""+j).find("img").attr("value","white");
-	}
+		supportAsignCellImage(i, j, "white", "horse");
 	//black horses
 	if (i == 0 && (j == 1 || j == 6))
-	{
-		$("#d"+i+""+j).html('<img src="images/set/black-horse.png">');
-		$("#d"+i+""+j).find("img").attr("class","horse");
-		$("#d"+i+""+j).find("img").attr("value","black");
-	}
+		supportAsignCellImage(i, j, "black", "horse");
 	//black bishops
 	if (i == 0 && (j == 2 || j == 5))
-	{
-		$("#d"+i+""+j).html('<img src="images/set/black-bishop.png">');
-		$("#d"+i+""+j).find("img").attr("class","bishop");
-		$("#d"+i+""+j).find("img").attr("value","black");
-	}
+		supportAsignCellImage(i, j, "black", "bishop");
 	//white bishops
 	if (i == 7 && (j == 2 || j == 5))
-	{
-		$("#d"+i+""+j).html('<img src="images/set/white-bishop.png">');
-		$("#d"+i+""+j).find("img").attr("class","bishop");
-		$("#d"+i+""+j).find("img").attr("value","white");
-	}
+		supportAsignCellImage(i, j, "white", "bishop");
 	//kings
 	if ((i == 0 || i == 7) && j== 4)
 	{
 		if (i == 0)
-		{
-			$("#d"+i+""+j).html('<img src="images/set/black-king.png">');
-			$("#d"+i+""+j).find("img").attr("value","black");
-		}
+			supportAsignCellImage(i, j, "black", "king");
 		else
-		{
-			$("#d"+i+""+j).html('<img src="images/set/white-king.png">');
-			$("#d"+i+""+j).find("img").attr("value","black");
-		}
-		$("#d"+i+""+j).find("img").attr("class","king");
-
+			supportAsignCellImage(i, j, "white", "king");
 	}
 	//queens
 	if ((i == 0 || i == 7) && j== 3)
 	{
 		if (i == 0)
-		{
-			$("#d"+i+""+j).html('<img src="images/set/black-queen.png">');
-			$("#d"+i+""+j).find("img").attr("value","black");
-		}
+			supportAsignCellImage(i, j, "black", "queen");	
 		else
-		{
-			$("#d"+i+""+j).html('<img src="images/set/white-queen.png">');
-			$("#d"+i+""+j).find("img").attr("value","white");
-		}
-		$("#d"+i+""+j).find("img").attr("class","queen");
+			supportAsignCellImage(i, j, "white", "queen");
 	}
+}
+
+//Support function which actually asign image, class and value to the pieces dinamically
+function supportAsignCellImage(i, j, color, piece)
+{
+		$("#d"+i+""+j).html('<img src="images/set/' + color + '-' + piece +'.png">');
+		if (piece == "pawn")
+			$("#d"+i+""+j).find("img").attr("class", color + "-" + piece);
+		else
+			$("#d"+i+""+j).find("img").attr("class", piece);
+		$("#d"+i+""+j).find("img").attr("value",color);
 }
 
 function showIntroPageOptions()
@@ -216,39 +180,39 @@ function setDrop()
 	{
 		for (j=0; j<8; j++)
 		{
-				$( "#d"+i+""+j).droppable({
-			    	drop: function( event, ui ) {
-			    		//Saving the useful ID (Drop, Drag and parent drag)
-			    		idDrop=$(this).parent().attr("id");	
-			    		idDrag=ui.draggable.attr("id");
-			    		pIdDrag = ui.draggable.parent().attr("id");;
-			    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
-			    		if (allowDrop == true)
-			    		{
-			    		//Removing the drop middle layer and adding the new layer with the image
-			    		$( "#"+idDrop ).children().remove();
-			    		$( "#"+idDrag).css("top","");
-						$( "#"+idDrag).css("left","");
-						$( "#"+idDrag).css("margin-top","");
-						$( "#"+idDrag).css("margin-left","");	
-			    		$("#"+idDrop).append($("#"+idDrag));
-						//Updating the id    	
-						var oldIdDrag = idDrag;			
-						$( "#"+idDrag ).attr("id","d"+idDrop);
-						$(oldIdDrag).parent().attr("id", oldIdDrag);
-						//TO EDIT
-						//Restore old drag father middle layer
-						supportCellClass = "main-board-drag-cell";
-						supportCell = $('<div />');
-        				supportCell.attr("id","d"+pIdDrag);
-        				supportCell.attr("class","middle-layer");
-        				supportCell.addClass(supportCellClass);
-						$("#"+pIdDrag).append(supportCell);
-						//Updating the dropabble property
-						setDrop();
-						}
-    				}
-  				});
+			$( "#d"+i+""+j).droppable({
+		    	drop: function( event, ui ) {
+		    		//Saving the useful ID (Drop, Drag and parent drag)
+		    		idDrop=$(this).parent().attr("id");	
+		    		idDrag=ui.draggable.attr("id");
+		    		pIdDrag = ui.draggable.parent().attr("id");;
+		    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
+		    		if (allowDrop == true)
+		    		{
+		    		//Removing the drop middle layer and adding the new layer with the image
+		    		$( "#"+idDrop ).children().remove();
+		    		$( "#"+idDrag).css("top","");
+					$( "#"+idDrag).css("left","");
+					$( "#"+idDrag).css("margin-top","");
+					$( "#"+idDrag).css("margin-left","");	
+		    		$("#"+idDrop).append($("#"+idDrag));
+					//Updating the id    	
+					var oldIdDrag = idDrag;			
+					$( "#"+idDrag ).attr("id","d"+idDrop);
+					$(oldIdDrag).parent().attr("id", oldIdDrag);
+					//TO EDIT
+					//Restore old drag father middle layer
+					supportCellClass = "main-board-drag-cell";
+					supportCell = $('<div />');
+    				supportCell.attr("id","d"+pIdDrag);
+    				supportCell.attr("class","middle-layer");
+    				supportCell.addClass(supportCellClass);
+					$("#"+pIdDrag).append(supportCell);
+					//Updating the dropabble property
+					setDrop();
+					}
+				}
+			});
 		}
 	}
 }
@@ -259,32 +223,32 @@ function setDrop()
 
 function checkPiece(allowDrop, idDrag, idDrop)
 {
-		var rowDrag = idDrag.substring(1,2);
-		var columnDrag =  idDrag.substring(2,3);
-		var rowDrop =  idDrop.substring(0,1);
-		var columnDrop =  idDrop.substring(1,2);
+	var rowDrag = idDrag.substring(1,2);
+	var columnDrag =  idDrag.substring(2,3);
+	var rowDrop =  idDrop.substring(0,1);
+	var columnDrop =  idDrop.substring(1,2);
 
-		allowDrop = false;
+	allowDrop = false;
 
-		//Check pawns
-		if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
-			allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
-			allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		//Check kings
-		if ($("#"+idDrag).find("img").attr("class") == "king")
-			allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		//Check queens
-		if ($("#"+idDrag).find("img").attr("class") == "queen")
-			allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		if ($("#"+idDrag).find("img").attr("class") == "bishop")
-			allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		if ($("#"+idDrag).find("img").attr("class") == "tower")
-			allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		if ($("#"+idDrag).find("img").attr("class") == "horse")
-			allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-		
-		return allowDrop;
+	//Check pawns
+	if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
+		allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
+		allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	//Check kings
+	if ($("#"+idDrag).find("img").attr("class") == "king")
+		allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	//Check queens
+	if ($("#"+idDrag).find("img").attr("class") == "queen")
+		allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	if ($("#"+idDrag).find("img").attr("class") == "bishop")
+		allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	if ($("#"+idDrag).find("img").attr("class") == "tower")
+		allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	if ($("#"+idDrag).find("img").attr("class") == "horse")
+		allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+	
+	return allowDrop;
 }	
 
 //Allow the drop of a white pawn
@@ -294,33 +258,33 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 	allowDrop = false;
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
-			//If is the 1st move (can move 2 cells)
-			if (rowDrag == "6")
-			{
-				nMoves = 2;
-				//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
-					allowDrop = true;
-				else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-				else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-			}
-			//if it isn't the 1st move
-			else
-			{
-				nMoves = 1;
-				//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+	//If is the 1st move (can move 2 cells)
+	if (rowDrag == "6")
+	{
+		nMoves = 2;
+		//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+			allowDrop = true;
+		else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+		else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+	}
+	//if it isn't the 1st move
+	else
+	{
+		nMoves = 1;
+		//if (checkMoveUp(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 
-				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
-					allowDrop = true;
-				//Check for the capturing
-				else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-				else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-			}
-		return allowDrop;
+		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+			allowDrop = true;
+		//Check for the capturing
+		else if (checkMoveObliqueUpLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+		else if (checkMoveObliqueUpRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+	}
+return allowDrop;
 }
 
 //Allow the drop of a white pawn
@@ -331,33 +295,33 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 
 	var nMoves;
 
-			//If is the 1st move (can move 2 cells)
-			if (rowDrag == "1")
-			{
-				nMoves = 2;
-				//if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-				//	allowDrop = true;
-				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
-					allowDrop = true;
-				if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-				if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-			}
-			//if it isn't the 1st move
-			else
-			{
-				nMoves = 1;
-				if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-				if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
-					allowDrop = true;
-				if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-				if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-					allowDrop = true;
-			}
-		return allowDrop;
+	//If is the 1st move (can move 2 cells)
+	if (rowDrag == "1")
+	{
+		nMoves = 2;
+		//if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+		//	allowDrop = true;
+		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+			allowDrop = true;
+		if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+		if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+	}
+	//if it isn't the 1st move
+	else
+	{
+		nMoves = 1;
+		if (checkMoveDown(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false))
+			allowDrop = true;
+		if (checkMoveObliqueDownLeft(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+		if (checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+			allowDrop = true;
+	}
+return allowDrop;
 }
 
 //Allow the drop of the kings
@@ -520,6 +484,7 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 	return false;
 }
 
+//First function used to switch which obstacle i am headed to
 function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, destination, delta, myClass)
 {
 	var obstacleValue, obstacleClass;
@@ -546,24 +511,25 @@ function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, d
 	return false;
 }
 
+//Function which actually analyze the obstacle and manage the moves
 function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass)
 {
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+columnObstacle).find("img").attr("class"));
 
-		if (obstacleValue == myValue)
-		{
-			console.log(obstacleClass);
-			alert("there is an obstacle!");				
-			return true;
-		}
-		if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
-			return true;
+	if (obstacleValue == myValue)
+	{
+		console.log(obstacleClass);
+		alert("there is an obstacle!");				
+		return true;
+	}
+	if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
+		return true;
 
-
-		return false;
+	return false;
 }
 
+//First function used to switch which direction i am headed to
 function checkDestination(rowSource, rowDest, columnSource, columnDest, destination, delta)
 {
 	switch (destination)
@@ -588,13 +554,12 @@ function checkDestination(rowSource, rowDest, columnSource, columnDest, destinat
 	return false;
 }
 
+//Is it the right spot? ok make the move
 function supportDestination(rowNow, columnNow, rowDest, columnDest)
 {
 	if (rowNow == rowDest && columnNow == columnDest)
-	{
 		return true;
-	}
-		
+	return false;
 }
 
 /*
@@ -732,11 +697,11 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 		myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 		if (obstacleValue == myValue  || obstacleValue == undefined)
 		{
-				if (columnSource == columnDest - i && rowSource == rowDest - i && obstacleValue == undefined)
-					return true;
-				else if (obstacleValue != undefined)
-					return false;
-				i++;
+			if (columnSource == columnDest - i && rowSource == rowDest - i && obstacleValue == undefined)
+				return true;
+			else if (obstacleValue != undefined)
+				return false;
+			i++;
 		}
 		else if (obstacleValue != undefined)
 		{
@@ -751,8 +716,11 @@ function checkMoveObliqueDownRight(rowDrag, rowDrop, columnDrag, columnDrop, how
 	}
 	return false;
 }
+/************************************END TO OPTIMIZE*************************************************/
 
-/**********************************END TO EDIT*************************************/
+/*
+*	The horse have a particular system of moving, have to use a different function
+*/
 function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 {	
 	var rowSource = parseInt(rowDrag);
@@ -774,11 +742,12 @@ function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 			}
 		}
 	}
-
 	return false;
-
 }
 
+/*
+* Help to move the horse in a optimized way
+*/
 function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource, columnDest)
 {
 	var obstacleValue = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("value"));
@@ -792,6 +761,7 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 }
 
 /*
+* Function that manage the capturing of a piece
 */
 function capturePiece()
 {
