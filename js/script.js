@@ -2,6 +2,7 @@
 ******Script - Developed by: Daniele Genta - Summer 2015********
 ***************************************************************/
 var nowPlaying = "white";
+var playerName1, playerName2;
 
 $(document).ready(function()
 {
@@ -10,6 +11,16 @@ $(document).ready(function()
 
 	//Events 
 	$("#btnStart").click(function(){
+
+		//save the names of the players
+		playerName1 = $("#txtNamePlayer1").val();
+		if (playerName1 == "")
+			playerName1 = "Player 1";
+		playerName2 = $("#txtNamePlayer2").val();
+		if (playerName2 == "")
+			playerName2 = "Player 2";
+		alert("Benvenuti: "+playerName1+" e "+playerName2);
+
 		showIntroPageOptions();
 	});
 	$("#btnStartGame").click(function(){
@@ -23,6 +34,65 @@ $(document).ready(function()
      		alert("Clicca sul bottone per iniziare la partita")
    		}
  	});
+
+	    // Switch Click
+		$('.Switch').click(function() {
+			
+			// Check If Enabled (Has 'On' Class)
+			if ($(this).hasClass('On')){
+				
+				// Try To Find Checkbox Within Parent Div, And Check It
+				$(this).parent().find('input:checkbox').attr('checked', true);
+				
+				// Change Button Style - Remove On Class, Add Off Class
+				$(this).removeClass('On').addClass('Off');
+				
+			} else { // If Button Is Disabled (Has 'Off' Class)
+			
+				// Try To Find Checkbox Within Parent Div, And Uncheck It
+				$(this).parent().find('input:checkbox').attr('checked', false);
+				
+				// Change Button Style - Remove Off Class, Add On Class
+				$(this).removeClass('Off').addClass('On');
+				
+			}
+			
+		});
+		
+	// Loops Through Each Toggle Switch On Page
+	$('.Switch').each(function() {
+		
+		// Search of a checkbox within the parent
+		if ($(this).parent().find('input:checkbox').length){
+			
+			// This just hides all Toggle Switch Checkboxs
+			// Uncomment line below to hide all checkbox's after Toggle Switch is Found
+			 //$(this).parent().find('input:checkbox').hide();
+			
+			// For Demo, Allow showing of checkbox's with the 'show' class
+			// If checkbox doesnt have the show class then hide it
+			if (!$(this).parent().find('input:checkbox').hasClass("show")){ $(this).parent().find('input:checkbox').hide(); }
+			// Comment / Delete out the above line when using this on a real site
+			
+			// Look at the checkbox's checkked state
+			if ($(this).parent().find('input:checkbox').is(':checked')){
+
+				// Checkbox is not checked, Remove the 'On' Class and Add the 'Off' Class
+				$(this).removeClass('On').addClass('Off');
+				
+			} else { 
+							
+				// Checkbox Is Checked Remove 'Off' Class, and Add the 'On' Class
+				$(this).removeClass('Off').addClass('On');
+				
+			}
+			
+		}
+		
+	});
+
+
+
 });
 
 //Initialize the page 
@@ -142,6 +212,7 @@ function gameStart()
 	$("#intro-page-options").hide();
 	$("#game-page").show();
 	$("#header-title").css({'font': '50px Helvetica, Sans-Serif'});
+	$("#whoisplaying-table-name").html(playerName1);
 
 	//Creation of the chess boards 
 	createBoard();
@@ -192,9 +263,18 @@ function setDragTurn()
 function manageTurn()
 {
 	if (nowPlaying == "white")
+	{
+		$("#whoisplaying-table-name").html(playerName2);
+		$("#whoisplaying-table-color-support").css("background-color", "black");
 		nowPlaying = "black";
+
+	}
 	else
+	{
+		$("#whoisplaying-table-name").html(playerName1);
+		$("#whoisplaying-table-color-support").css("background-color", "white");
 		nowPlaying = "white";
+	}
 
 	setDragTurn();
 }
@@ -581,7 +661,6 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 					return true;
 			}		
 		}
-
 		//up right
 		if (columnSource < columnDest && rowSource > rowDest)
 		{
@@ -593,7 +672,6 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 					return true;
 			}			
 		}
-
 		//down left
 		if (columnSource > columnDest && rowSource < rowDest)
 		{
@@ -605,7 +683,6 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 					return true;
 			}			
 		}
-
 		//down right
 		if (columnSource < columnDest && rowSource < rowDest)
 		{

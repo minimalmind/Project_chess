@@ -5,41 +5,37 @@
 		</title>
 		<!--Linking to CSS and JS resources-->
 		<link href="css/style.css" rel="stylesheet" type="text/css">
-
 		
 		<!--Linking to jQuery and jQuery-UI-->
 		<script src="http://code.jquery.com/jquery-latest.js"></script> 
 		<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-
 		<script type="text/javascript" src="js/script.js"> </script>
+
 		
 	</head>
 	<body class="main">
 
-
-
 		<div id="common-page">
 			<div id="header">
-				<h1 id="header-title">Project Chess</h1>
-				<h2 id="header-subtitle">Gioco di scacchi sviluppato in: HTML, CSS, JS</h2>
+				<div id="header-title">Project Chess</div>
+				<div id="header-subtitle">Gioco di scacchi sviluppato in: HTML, CSS, JS</div>
 			</div>
 		</div>
 
-				
 		<div id="intro-page">
 			<div class="container">
-  				<h2>Inserisci il tuo nome per iniziare a giocare</h2>
+  				<div id="inro-page-tip" align="center">Inserisci il tuo nome per iniziare a giocare</div>
   				<br><br><br>
 				<form>
    					<div class="group">      
-      					<input type="text" id="txtName" required>
+      					<input type="text" id="txtNamePlayer1" required>
       					<span class="highlight"></span>
       					<span class="bar"></span>
      		 			<label>Nome giocatore</label>
     				</div>
     				<br>
     				<div class="group">  
-    				     <input type="text" id="txtName" required>
+    				     <input type="text" id="txtNamePlayer2" required>
       					<span class="highlight"></span>
       					<span class="bar"></span>
      		 			<label>Nome giocatore n.2</label>
@@ -49,37 +45,70 @@
 			</div>
 		</div>
 
-			<div id="intro-page-options">
+		<div id="intro-page-options">
 			<div class="container">
-  				<h2>Setta le opzioni della partita per iniziare a giocare</h2>
-  			
-				<form>
-   					<div class="group">      
-   						
-
-
-   					
-
-    				</div>
- 			 	</form>
-				<input type="button" value="Inzia la partita" id="btnStartGame" class="btnStart">
+  				<div id="intro-page-options-tip" align = "center">
+  					Setta le opzioni della partita per iniziare a giocare
+  				</div>
+  					<br><br>
+	  				<form>  	
+						<div>
+							Rotazione scacchiera:     
+							<input type="checkbox" checked>
+							<div class="Switch Round">
+								<div class="Toggle"></div>
+							</div>
+							<br><br>
+							Modalit&agrave di gioco:    
+							<select id="blue">
+							  	<option selected="true" style="display:none;">Scegli...        &#9661</option>
+							    <option >Senza timer</option>
+							    <option>Timer mod. 1</option>
+							    <option>Timer mod. 2</option>
+							  
+							</select>
+						</div>		
+					</form>
+					<br>
+					<input type="button" value="Inzia la partita" id="btnStartGame" class="btnStart">
+	  				
 			</div>
 		</div>
 
-
 		<div id="game-page">
-
-
-
-			<div id="main">
-				<div id="main-board">
-
-				</div>	
+		<br> <br>
+		<div id="main">
+			<div id="main-whoisplaying">
+				<div id="whoispalying-table" align="center">
+					<table id="turnTable">
+						<tr>
+							<td id="whoisplaying-table-status">
+								&#9658
+							</td>
+							<td id="whoisplaying-table-color">
+								<div id="whoisplaying-table-color-support">
+								</div>
+							</td>
+							<td id="whoisplaying-table-name">
+								Nome
+							</td>
+							<td id="whoisplaying-table-timer">
+								00:00
+							</td>
+						</tr>	
+					</table>
+				</div>
 			</div>
+			<br><br>
+
+			<div id="main-board">
+
+			</div>	
+		</div>
 
 
 			<div id="footer">
-				<h2 id="footer-info">Sviluppato da: Daniele Genta - Estate 2015 </h2>
+				<div id="footer-info">Sviluppato da: Daniele Genta - Estate 2015 </div>
 			</div>
 		</div>
 	</body>
