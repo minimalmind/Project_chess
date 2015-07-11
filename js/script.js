@@ -564,24 +564,22 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 
 	i = 1;
 
+
 //--
-	while (i < howManyMoves)
+	while (i <= howManyMoves)
 	{
 	//all the pieces calling this functions can go up
 		
 	//up left
 		if (columnSource > columnDest && rowSource > rowDest)
 		{
-
 			if (isObstacolatedOblique(rowSource, rowDest, columnSource, columnDest, "ul", i, myValue, myClass))
-			{
 				safetyReturn = false;
-			}
 			else
 			{
 				if (checkDestinationOblique(rowSource, rowDest, columnSource, columnDest, "ul", i))
 					return true;
-			}			
+			}		
 		}
 
 		//up right
@@ -663,13 +661,15 @@ function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("class"));
 
-	if (obstacleValue == myValue)
+
+	if (obstacleValue == myValue)				
+		return true;
+	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
 	{
-		alert("there is an obstacle in: "+rowObstacle+""+columnObstacle+" :"+obstacleClass);				
+
 		return true;
 	}
-	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
-		return true;
+		
 
 	return false;
 }
@@ -680,7 +680,6 @@ function checkDestinationOblique(rowSource, rowDest, columnSource, columnDest, d
 	switch (destination)
 	{
 		case "ul":
-			alert("qui");
 			 if (supportDestination((rowSource - i), (columnSource - i), rowDest, columnDest))
 			 	return true;
 		break;
@@ -698,7 +697,6 @@ function checkDestinationOblique(rowSource, rowDest, columnSource, columnDest, d
 		break;
 	}
 	return false;
-	return true;
 }
 /************************************END TO OPTIMIZE*************************************************/
 /*
