@@ -19,12 +19,26 @@
 
 		<div id="common-page">
 			<div id="header">
-				<div id="header-title">Project Chess</div>
+				<div id="header-title" class="header-title" align="center">Project Chess</div>
 				<div id="header-subtitle">Gioco di scacchi sviluppato in: HTML, CSS, JS</div>
 			</div>
-		</div>
 
-		<div id="intro-page">
+
+
+
+			<div id="tabs">
+			<div id="tabs-menu"> 
+  <ul>
+    <li><a href="#tabs-1">Gioco</a></li>
+    <li><a href="#tabs-2">Statistiche</a></li>
+    <li><a href="#tabs-3">Documentazione</a></li>
+    <li class="slider"></li>
+  </ul>
+  </div>
+  <div id="tabs-1">
+
+
+  			<div id="intro-page">
 			<div class="container">
   				<div id="inro-page-tip" align="center">Inserisci il tuo nome per iniziare a giocare</div>
   				<br><br><br>
@@ -79,30 +93,32 @@
 		<div id="game-page">
 		<br> <br>
 		<div id="main">
-			<div id="main-whoisplaying">
-				<div id="whoispalying-table" align="center">
-					<table id="turnTable">
-						<tr>
-							<td id="whoisplaying-table-status">
-								&#9658
-							</td>
-							<td id="whoisplaying-table-color">
-								<div id="whoisplaying-table-color-support">
-								</div>
-							</td>
-							<td id="whoisplaying-table-name">
-								Nome
-							</td>
-						</tr>	
-					</table>
-				</div>
-			</div>
-			<br><br>
-
 			<table id="main-board-table">
 				<tr>
 					<td id="main-board-table-countdown"> 
-						<div id="countdown"></div>
+						
+
+						<div id="main-whoisplaying">
+							<div id="whoispalying-table" align="center">
+								<table id="turnTable">
+									<tr>
+										<td id="whoisplaying-table-status">
+											&#9658
+										</td>
+										<td id="whoisplaying-table-color">
+											<div id="whoisplaying-table-color-support">
+											</div>
+										</td>
+										<td id="whoisplaying-table-name">
+											Nome
+										</td>
+									</tr>	
+								</table>
+							</div>
+						</div>
+
+						<div id="countdown" align="center"></div>
+
 					</td>
 					<td align="center" id = "main-board-table-board">
 						<div id="main-board">
@@ -123,5 +139,25 @@
 				<div id="footer-info">Sviluppato da: Daniele Genta - Estate 2015 </div>
 			</div>
 		</div>
+
+
+
+  </div>
+  <div id="tabs-2">
+
+  </div>
+  <div id="tabs-3">
+			<div class="container">
+				Qui crediti, come si gioca...
+			</div>
+  </div>
+</div>
+
+
+
+
+		</div>
+
+
 	</body>
 </html>

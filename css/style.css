@@ -31,16 +31,11 @@
   font-size: 20px;
   font-weight: 300; 
   line-height: 32px;
-  margin: 0 auto;
   text-align: center;
 }
 
-#turnTable td
-{
-  width: 25%;
-}
 
-#turnTable #whoisplaying-table-color-support
+#whoisplaying-table-color-support
 {
   border-radius: 100px; 
   background-color: white;
@@ -115,6 +110,7 @@
   display:block; 
   background:#FFF;
   padding:10px 50px 50px;
+  min-height: 300px;
 }
 
 input 				
@@ -222,7 +218,7 @@ input:focus ~ .highlight {
   text-align: center;
 }
 
-#header-title
+.header-title
 {
 	text-shadow: 0px 1px 1px #4d4d4d;
 	color: #222;
@@ -230,7 +226,15 @@ input:focus ~ .highlight {
   margin: 0 auto;
 }
 
-#header-subtitle, #footer-info, #intro-page-tip, #intro-page-options-tip
+.header-title-min
+{
+  text-shadow: 0px 1px 1px #4d4d4d;
+  color: #222;
+  font: 50px 'LeagueGothicRegular'; 
+  margin: 0 auto;
+}
+
+#header-subtitle, #footer-info, #intro-page-tip, #intro-page-options-tip 
 {
   color: #111;
   font-family: 'Open Sans', sans-serif; 
@@ -238,6 +242,12 @@ input:focus ~ .highlight {
   font-weight: 300; 
   line-height: 32px;
   margin: 0 auto;
+}
+
+#tabs-menu
+{
+  width: 100%;
+  background: #616161;
 }
 
 .main
@@ -413,3 +423,86 @@ select {
 {
   width: 50%;
 }
+
+#whoisplaying-table
+{
+  width: 50%;
+}
+
+
+/*TABS*/
+ul {
+  font-size: 0;
+  position: relative;
+  padding: 0;
+  width: 480px;
+  margin: 0 auto;
+  user-select: none;
+}
+
+li, a {
+  color: black;
+  display: inline-block;
+  width: 160px;
+  height: 75px;
+  background: #616161;
+  font-size: 16px;
+  text-align: center;
+  line-height: 75px;
+  color: black;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.slider {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: #424242;
+  transition: all 0.5s;
+}
+
+.ripple {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  position: absolute;
+  opacity: 1;
+}
+
+.rippleEffect {
+  -webkit-animation: rippleDrop .6s linear;
+  animation: rippleDrop .6s linear;
+}
+
+@-webkit-keyframes 
+rippleDrop {  100% {
+ -webkit-transform: scale(2);
+ transform: scale(2);
+ opacity: 0;
+}
+}
+
+@keyframes 
+rippleDrop {  100% {
+ -webkit-transform: scale(2);
+ transform: scale(2);
+ opacity: 0;
+}
+}
+
+#common-page-tabmenu
+{
+  width: 100%;
+  background: #4285f4;
+}
+
+

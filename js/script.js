@@ -6,8 +6,10 @@ var playerName1, playerName2;
 
 $(document).ready(function()
 {
+
 	//Initialize the project
-	init()
+	init();
+	$("#tabs").tabs();
 
 	//Events 
 	$("#btnStart").click(function(){
@@ -61,27 +63,17 @@ $(document).ready(function()
 		
 	// Loops Through Each Toggle Switch On Page
 	$('.Switch').each(function() {
-		
 		// Search of a checkbox within the parent
 		if ($(this).parent().find('input:checkbox').length){
-			
-			// This just hides all Toggle Switch Checkboxs
-			// Uncomment line below to hide all checkbox's after Toggle Switch is Found
-			 //$(this).parent().find('input:checkbox').hide();
-			
-			// For Demo, Allow showing of checkbox's with the 'show' class
 			// If checkbox doesnt have the show class then hide it
 			if (!$(this).parent().find('input:checkbox').hasClass("show")){ $(this).parent().find('input:checkbox').hide(); }
 			// Comment / Delete out the above line when using this on a real site
 			
 			// Look at the checkbox's checkked state
 			if ($(this).parent().find('input:checkbox').is(':checked')){
-
 				// Checkbox is not checked, Remove the 'On' Class and Add the 'Off' Class
-				$(this).removeClass('On').addClass('Off');
-				
+				$(this).removeClass('On').addClass('Off');	
 			} 
-
 			else 
 			{ 
 				// Checkbox Is Checked Remove 'Off' Class, and Add the 'On' Class
@@ -90,11 +82,43 @@ $(document).ready(function()
 		}
 	});
 
+	$("ul li").click(function(e) {
+		  if ($(this).hasClass('slider')) {
+		    return;
+		  }
+		  var whatTab = $(this).index();
+		  var howFar = 160 * whatTab;
+		  $(".slider").css({
+		    left: howFar + "px"
+		  });
+		  $(".ripple").remove();
+		  var posX = $(this).offset().left,
+		      posY = $(this).offset().top,
+		      buttonWidth = $(this).width(),
+		      buttonHeight = $(this).height();
+		  $(this).prepend("<span class='ripple'></span>");
+		  if (buttonWidth >= buttonHeight) {
+		    buttonHeight = buttonWidth;
+		  } else {
+		    buttonWidth = buttonHeight;
+		  }
+		  var x = e.pageX - posX - buttonWidth / 2;
+		  var y = e.pageY - posY - buttonHeight / 2;
+		  $(".ripple").css({
+		    width: buttonWidth,
+		    height: buttonHeight,
+		    top: y + 'px',
+		    left: x + 'px'
+		  }).addClass("rippleEffect");
+});
+
+
 });
 
 //Initialize the page 
 function init()
 {
+	
 	$("#game-page").hide();
 	$("#intro-page-options").hide();
 }
@@ -208,7 +232,8 @@ function gameStart()
 {
 	$("#intro-page-options").hide();
 	$("#game-page").show();
-	$("#header-title").css({'font': '50px Helvetica, Sans-Serif'});
+	$("#header-title").removeClass("header-title");
+	$("#header-title").addClass("header-title-min");
 	$("#whoisplaying-table-name").html(playerName1);
 
 	//Creation of the chess boards 
@@ -227,8 +252,8 @@ function manageTimer()
 	  radius      : 60.5,
 	  seconds     : 120,
 	  strokeWidth : 15,
-	  fillStyle   : '#4285f4',
-	  strokeStyle : '#003F87',
+	  fillStyle   : '#616161',
+	  strokeStyle : '#424242',
 	  fontSize    : 50,
 	  fontColor   : '#FFFFFF',
 	  autostart: false,
