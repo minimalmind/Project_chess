@@ -7,7 +7,7 @@ var playerName1, playerName2;
 $(document).ready(function()
 {
 	//Initialize the project
-	init();
+	init()
 
 	//Events 
 	$("#btnStart").click(function(){
@@ -80,18 +80,15 @@ $(document).ready(function()
 				// Checkbox is not checked, Remove the 'On' Class and Add the 'Off' Class
 				$(this).removeClass('On').addClass('Off');
 				
-			} else { 
-							
+			} 
+
+			else 
+			{ 
 				// Checkbox Is Checked Remove 'Off' Class, and Add the 'On' Class
-				$(this).removeClass('Off').addClass('On');
-				
-			}
-			
+				$(this).removeClass('Off').addClass('On');	
+			}	
 		}
-		
 	});
-
-
 
 });
 
@@ -220,6 +217,26 @@ function gameStart()
 	//Set the function drag on the chess set
 	setDrag();
 	setDrop();
+
+	manageTimer();
+}
+
+function manageTimer()
+{
+  $("#countdown").countdown360({
+	  radius      : 60.5,
+	  seconds     : 120,
+	  strokeWidth : 15,
+	  fillStyle   : '#4285f4',
+	  strokeStyle : '#003F87',
+	  fontSize    : 50,
+	  fontColor   : '#FFFFFF',
+	  autostart: false,
+	  onComplete  : function () { console.log('completed') }
+	}).start()
+
+
+
 }
 
 /********************************************************************************

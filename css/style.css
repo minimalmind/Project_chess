@@ -390,3 +390,26 @@ select {
 #blue:hover {
   background-color:#4285f4;
   color:white;
+}
+
+/*
+*/
+#main-board-table
+{
+  width: 100%;
+}
+
+#main-board-table-countdown
+{
+  width: 25%;
+}
+
+#main-board-table-graveyard
+{
+  width: 25%;
+}
+
+#main-board-table-board
+{
+  width: 50%;
+}
