@@ -40,7 +40,7 @@
 
   			<div id="intro-page">
 			<div class="container">
-  				<div id="inro-page-tip" align="center">Inserisci il tuo nome per iniziare a giocare</div>
+  				<div id="inro-page-tip" align="center"><strong>Ciao, come vi chiamate?</strong></div>
   				<br><br><br>
 				<form>
    					<div class="group">      
@@ -54,7 +54,7 @@
     				     <input type="text" id="txtNamePlayer2" required>
       					<span class="highlight"></span>
       					<span class="bar"></span>
-     		 			<label>Nome giocatore n.2</label>
+     		 			<label>Nome secondo giocatore</label>
      		 		</div>
  			 	</form>
 				<input type="button" value="Inzia la partita" id="btnStart" class="btnStart">
@@ -64,7 +64,7 @@
 		<div id="intro-page-options">
 			<div class="container">
   				<div id="intro-page-options-tip" align = "center">
-  					Setta le opzioni della partita per iniziare a giocare
+  					<strong>Come preferite giocare?</strong>
   				</div>
   					<br><br>
 	  				<form>  	
@@ -80,8 +80,11 @@
 							    <option >Senza timer</option>
 							    <option>Timer mod. 1</option>
 							    <option>Timer mod. 2</option>
-							  
 							</select>
+							<br><br><br>
+							<div id="info-timer">
+								Qui informazioni rispetto alle modalit&agrave di gioco scelte
+							</div>
 						</div>		
 					</form>
 					<br>
@@ -102,9 +105,6 @@
 							<div id="whoispalying-table" align="center">
 								<table id="turnTable">
 									<tr>
-										<td id="whoisplaying-table-status">
-											&#9658
-										</td>
 										<td id="whoisplaying-table-color">
 											<div id="whoisplaying-table-color-support">
 											</div>

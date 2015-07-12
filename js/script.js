@@ -121,6 +121,8 @@ function init()
 	
 	$("#game-page").hide();
 	$("#intro-page-options").hide();
+
+
 }
 
 //Dynamic creation of the chess board 
@@ -244,6 +246,8 @@ function gameStart()
 	setDrop();
 
 	manageTimer();
+
+	document.title = "\u25B6 Project Chess";
 }
 
 function manageTimer()
@@ -255,7 +259,7 @@ function manageTimer()
 	  fillStyle   : '#616161',
 	  strokeStyle : '#424242',
 	  fontSize    : 50,
-	  fontColor   : '#FFFFFF',
+	  fontColor   : '#000000',
 	  autostart: false,
 	  onComplete  : function () { console.log('completed') }
 	}).start()

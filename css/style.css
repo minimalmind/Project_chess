@@ -441,7 +441,6 @@ ul {
 }
 
 li, a {
-  color: black;
   display: inline-block;
   width: 160px;
   height: 75px;
@@ -450,10 +449,16 @@ li, a {
   text-align: center;
   line-height: 75px;
   color: black;
-  text-transform: uppercase;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+
+  color: #111;
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 15px;
+  font-weight: 500; 
 }
 
 .slider {
