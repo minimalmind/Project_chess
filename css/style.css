@@ -191,7 +191,6 @@ input:focus ~ .highlight {
 {
    height: 100%;
    vertical-align: middle;
-
 }
 
 
@@ -411,7 +410,7 @@ select {
 /*
 * Tabs
 */
-ul {
+#main-ul {
   font-size: 0;
   position: relative;
   padding: 0;
@@ -420,7 +419,18 @@ ul {
   user-select: none;
 }
 
-li, a {
+#info-ul
+{
+  font-size: 0;
+  position: relative;
+  padding: 0;
+  width: 480px;
+  margin: 0 auto;
+  user-select: none;
+
+}
+
+.main-li, .main-a {
   display: inline-block;
   width: 160px;
   height: 75px;
@@ -439,6 +449,30 @@ li, a {
   font-family: 'Open Sans', sans-serif; 
   font-size: 15px;
   font-weight: 500; 
+}
+
+.info-li .info-a
+{
+  display: inline-block;
+  width: 160px;
+  height: 75px;
+  background: #757575;
+  font-size: 16px;
+  text-align: center;
+  line-height: 75px;
+  color: black;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+
+  color: #111;
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 15px;
+  font-weight: 500; 
+
+  float: left;
 }
 
 .slider {
@@ -490,6 +524,13 @@ rippleDrop {  100% {
 {
   width: 100%;
   background: #616161;
+
+}
+
+#tabs-info-menu
+{
+  width: 100%;
+  background: #424242;
 }
 
 /*

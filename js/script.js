@@ -10,6 +10,7 @@ $(document).ready(function()
 	//Initialize the project
 	init();
 	$("#tabs").tabs();
+	$("#tabs-info").tabs();
 
 	//Events 
 	$("#btnStart").click(function(){
