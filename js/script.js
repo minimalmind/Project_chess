@@ -38,29 +38,26 @@ $(document).ready(function()
    		}
  	});
 
-	    // Switch Click
-		$('.Switch').click(function() {
-			
-			// Check If Enabled (Has 'On' Class)
-			if ($(this).hasClass('On')){
-				
-				// Try To Find Checkbox Within Parent Div, And Check It
-				$(this).parent().find('input:checkbox').attr('checked', true);
-				
-				// Change Button Style - Remove On Class, Add Off Class
-				$(this).removeClass('On').addClass('Off');
-				
-			} else { // If Button Is Disabled (Has 'Off' Class)
-			
-				// Try To Find Checkbox Within Parent Div, And Uncheck It
-				$(this).parent().find('input:checkbox').attr('checked', false);
-				
-				// Change Button Style - Remove Off Class, Add On Class
-				$(this).removeClass('Off').addClass('On');
-				
-			}
-			
-		});
+    // Switch Click
+	$('.Switch').click(function() {
+		
+		// Check If Enabled (Has 'On' Class)
+		if ($(this).hasClass('On'))
+		{
+			// Try To Find Checkbox Within Parent Div, And Check It
+			$(this).parent().find('input:checkbox').attr('checked', true);
+			// Change Button Style - Remove On Class, Add Off Class
+			$(this).removeClass('On').addClass('Off');
+		}
+		else
+		{ 
+			// If Button Is Disabled (Has 'Off' Class)
+			// Try To Find Checkbox Within Parent Div, And Uncheck It
+			$(this).parent().find('input:checkbox').attr('checked', false);
+			// Change Button Style - Remove Off Class, Add On Class
+			$(this).removeClass('Off').addClass('On');	
+		}	
+	});
 		
 	// Loops Through Each Toggle Switch On Page
 	$('.Switch').each(function() {
@@ -111,9 +108,7 @@ $(document).ready(function()
 		    top: y + 'px',
 		    left: x + 'px'
 		  }).addClass("rippleEffect");
-});
-
-
+	});
 });
 
 //Initialize the page 

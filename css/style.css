@@ -95,6 +95,7 @@
   background:#FFF;
   padding:10px 50px 50px;
   min-height: 300px;
+  vertical-align: middle;
 }
 
 input 				
@@ -227,7 +228,7 @@ input:focus ~ .highlight {
 /*
 * Font style
 */
-#header-subtitle, #footer-info, #intro-page-tip, #intro-page-options-tip 
+#header-subtitle, #footer-info, #intro-page-tip, #intro-page-options-tip, .example-table
 {
   color: #111;
   font-family: 'Open Sans', sans-serif; 
@@ -560,4 +561,27 @@ rippleDrop {  100% {
   width: 50%;
 }
 
+/*
+* Flat table stats
+*/
+.example-table {
+margin: 10% auto;
+-webkit-font-smoothing: antialiased;
+font-size: 115%;
+width: auto;
+overflow: auto;
+display: block;
+}
+.example-table th {
+background-color: #616161;
+font-weight: normal;
+color: #fff;
+padding: 20px 30px;
+text-align: center;
+}
+.example-table td {
+background-color: rgb(238, 238, 238);
+padding: 20px 30px;
+color: rgb(111, 111, 111);
+}
 
