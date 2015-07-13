@@ -611,5 +611,9 @@ color: rgb(111, 111, 111);
 /*
 * Moves history
 */
-
+#slider
+{
+  background-color: #424242;
+  color: black;
+}
 

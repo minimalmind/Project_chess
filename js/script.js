@@ -120,7 +120,12 @@ function init()
 	$("#game-page").hide();
 	$("#intro-page-options").hide();
 
-	
+	$(function($) {
+  		var slider = $("#slider").slideReveal({
+  		trigger: $("#trigger"),
+  		position: "right"
+  	});
+});
 
 
 }
