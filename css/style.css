@@ -19,29 +19,10 @@
 	height: 680px;
 	width: 680px;
 	vertical-align: middle;
-
-	/*********TO EDIT********/
 	margin: 0 auto; 	
 }
 
-#turnTable
-{
-  color: #111;
-  font-family: 'Open Sans', sans-serif; 
-  font-size: 20px;
-  font-weight: 300; 
-  line-height: 32px;
-  text-align: center;
-}
 
-
-#whoisplaying-table-color-support
-{
-  border-radius: 100px; 
-  background-color: white;
-  width: 25px;
-  height:  25px;
-}
 
 .main-board-cell-black
 {
@@ -77,6 +58,9 @@
 	background-color: #F5F5DC;
 }
 
+/*
+* Intro page name
+*/
 
 .btnStart 
 {
@@ -203,6 +187,13 @@ input:focus ~ .highlight {
   margin-bottom:45px; 
 }
 
+#intro-page
+{
+   height: 100%;
+   vertical-align: middle;
+
+}
+
 
 
 
@@ -234,6 +225,9 @@ input:focus ~ .highlight {
   margin: 0 auto;
 }
 
+/*
+* Font style
+*/
 #header-subtitle, #footer-info, #intro-page-tip, #intro-page-options-tip 
 {
   color: #111;
@@ -244,18 +238,16 @@ input:focus ~ .highlight {
   margin: 0 auto;
 }
 
-#tabs-menu
-{
-  width: 100%;
-  background: #616161;
-}
+
 
 .main
 {
-	   background-color: #9E9E9E; 
+	background-color: #9E9E9E; 
 }
 
-/*****************FOOTER*********/
+/*
+****************FOOTER
+*********/
 #footer
 {
   width: 100%;
@@ -267,16 +259,7 @@ input:focus ~ .highlight {
   margin: 0 auto;
 }
 
-#intro-page
-{
-   height: 100%;
-   vertical-align: middle;
 
-}
-
-
-
-/*******************/
 
 /*------------------------------------------------*/
 /* Switch SECTION START*/
@@ -364,7 +347,9 @@ pre {
 .demo { padding-left: 30px; }
 
 
-/* combobox */
+/* 
+* Combobox intro-page-option
+*/
 select {
   background-color:white;
   background-repeat:no-repeat;
@@ -403,18 +388,14 @@ select {
 }
 
 /*
+* Game table
 */
 #main-board-table
 {
   width: 100%;
 }
 
-#main-board-table-countdown
-{
-  width: 25%;
-}
-
-#main-board-table-graveyard
+#main-board-table-countdown, #main-board-table-graveyard
 {
   width: 25%;
 }
@@ -424,13 +405,12 @@ select {
   width: 50%;
 }
 
-#whoisplaying-table
-{
-  width: 50%;
-}
 
 
-/*TABS*/
+
+/*
+* Tabs
+*/
 ul {
   font-size: 0;
   position: relative;
@@ -504,10 +484,39 @@ rippleDrop {  100% {
 }
 }
 
-#common-page-tabmenu
+
+
+#tabs-menu
 {
   width: 100%;
-  background: #4285f4;
+  background: #616161;
+}
+
+/*
+* Who is playing and is color
+*/
+#turnTable
+{
+  color: #111;
+  font-family: 'Open Sans', sans-serif; 
+  font-size: 20px;
+  font-weight: 300; 
+  line-height: 32px;
+  text-align: center;
+}
+
+
+#whoisplaying-table-color-support
+{
+  border-radius: 100px; 
+  background-color: white;
+  width: 25px;
+  height:  25px;
+}
+
+#whoisplaying-table
+{
+  width: 50%;
 }
 
 
