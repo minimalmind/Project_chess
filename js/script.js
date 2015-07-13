@@ -3,6 +3,8 @@
 ***************************************************************/
 var nowPlaying = "white";
 var playerName1, playerName2;
+var selectedTimerMode;
+var isRotable;
 
 $(document).ready(function()
 {
@@ -118,6 +120,8 @@ function init()
 	$("#game-page").hide();
 	$("#intro-page-options").hide();
 
+	
+
 
 }
 
@@ -228,6 +232,9 @@ function showIntroPageOptions()
 //Initialize the game
 function gameStart()
 {
+
+	gameConfig();
+
 	$("#intro-page-options").hide();
 	$("#game-page").show();
 	$("#header-title").removeClass("header-title");
@@ -246,22 +253,39 @@ function gameStart()
 	document.title = "\u25B6 Project Chess";
 }
 
+function gameConfig()
+{
+	selectedTimerMode = $("select").val();
+	if ($('#switchRotation').is(":checked"))
+	{
+  	// it is checked
+  		isRotable = false;
+	}
+	else
+		isRotable = true;
+}
+
 function manageTimer()
 {
-  $("#countdown").countdown360({
-	  radius      : 60.5,
-	  seconds     : 120,
-	  strokeWidth : 15,
-	  fillStyle   : '#616161',
-	  strokeStyle : '#424242',
-	  fontSize    : 50,
-	  fontColor   : '#000000',
-	  autostart: false,
-	  onComplete  : function () { console.log('completed') }
-	}).start()
-
-
-
+	var runTime;
+	if (selectedTimerMode == "Timer1")
+ 	 	runTime = 60;
+	else if (selectedTimerMode == "Timer2")
+ 	 	runTime = 120;
+	if (selectedTimerMode != "Senza timer")
+	{
+ 	 	$("#countdown").countdown360({
+		  radius      : 60.5,
+		  seconds     : runTime,
+		  strokeWidth : 15,
+		  fillStyle   : '#616161',
+		  strokeStyle : '#424242',
+		  fontSize    : 50,
+		  fontColor   : '#000000',
+		  autostart: false,
+	  	  onComplete  : function () { manageTurn(); }
+		}).start()
+ 	 }
 }
 
 /********************************************************************************
@@ -319,6 +343,7 @@ function manageTurn()
 	}
 
 	setDragTurn();
+	manageTimer();
 }
 
 //Set all the empty cells droppable
@@ -338,28 +363,33 @@ function setDrop()
 		    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
 		    		if (allowDrop == true)
 		    		{
-		    		//Removing the drop middle layer and adding the new layer with the image
-		    		$( "#"+idDrop ).children().remove();
-		    		$( "#"+idDrag).css("top","");
-					$( "#"+idDrag).css("left","");
-					$( "#"+idDrag).css("margin-top","");
-					$( "#"+idDrag).css("margin-left","");	
-		    		$("#"+idDrop).append($("#"+idDrag));
-					//Updating the id    	
-					var oldIdDrag = idDrag;			
-					$( "#"+idDrag ).attr("id","d"+idDrop);
-					$(oldIdDrag).parent().attr("id", oldIdDrag);
-					//TO EDIT
-					//Restore old drag father middle layer
-					supportCellClass = "main-board-drag-cell";
-					supportCell = $('<div />');
-    				supportCell.attr("id","d"+pIdDrag);
-    				supportCell.attr("class","middle-layer");
-    				supportCell.addClass(supportCellClass);
-					$("#"+pIdDrag).append(supportCell);
-					//Updating the dropabble property
-					setDrop();
-					manageTurn();
+
+		    			
+
+			    		//Removing the drop middle layer and adding the new layer with the image
+			    		$( "#"+idDrop ).children().remove();
+			    		$( "#"+idDrag).css("top","");
+						$( "#"+idDrag).css("left","");
+						$( "#"+idDrag).css("margin-top","");
+						$( "#"+idDrag).css("margin-left","");	
+			    		$("#"+idDrop).append($("#"+idDrag));
+						//Updating the id    	
+						var oldIdDrag = idDrag;			
+						$( "#"+idDrag ).attr("id","d"+idDrop);
+						$(oldIdDrag).parent().attr("id", oldIdDrag);
+						//TO EDIT
+						//Restore old drag father middle layer
+						supportCellClass = "main-board-drag-cell";
+						supportCell = $('<div />');
+	    				supportCell.attr("id","d"+pIdDrag);
+	    				supportCell.attr("class","middle-layer");
+	    				supportCell.addClass(supportCellClass);
+						$("#"+pIdDrag).append(supportCell);
+						//Updating the dropabble property
+
+
+						setDrop();
+						manageTurn();
 					}
 				}
 			});
@@ -625,6 +655,7 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 {
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+columnObstacle).find("img").attr("class"));
+	obstacleID = "#d"+rowObstacle+""+columnObstacle;
 
 	if (obstacleValue == myValue)
 	{
@@ -633,6 +664,8 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 	}
 	if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
 		return true;
+	else if (obstacleValue != undefined)
+		appendToGraveyard(obstacleID);
 
 	return false;
 }
@@ -779,16 +812,15 @@ function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest
 {
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("class"));
+	obstacleID = "#d"+(rowObstacle)+""+columnObstacle;
 
 
 	if (obstacleValue == myValue)				
 		return true;
 	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
-	{
-
 		return true;
-	}
-		
+	if (obstacleValue != undefined)
+		appendToGraveyard(obstacleID);
 
 	return false;
 }
@@ -850,13 +882,19 @@ function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 */
 function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource, columnDest)
 {
+	var obstacleID = "#d"+rowSource+""+columnSource;
 	var obstacleValue = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("value"));
 	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 
 	if (obstacleValue == myValue)
 		return false;
 	else if ((rowSource == rowDest+deltaRows) && (columnSource == columnDest + deltaColumns))
+	{
+		if (obstacleValue != undefined)
+			appendToGraveyard(obstacleID);
 		return true;
+	}
+		
 	return false;
 }
 
@@ -867,6 +905,15 @@ function capturePiece()
 {
 	alert("Capturing piece!");
 	//  .....
+}
+
+function appendToGraveyard(id)
+{
+	var value = ($(id).find("img").attr("value"));
+	if (value == "white")
+		$("#black-graveyard").append(($(id).find("img")));
+	else if (value == "black")
+		$("#white-graveyard").append(($(id).find("img")));
 }
 
 

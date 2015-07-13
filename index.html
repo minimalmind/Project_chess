@@ -24,6 +24,10 @@
 			</div>
 
 			<div id="tabs">
+
+
+				
+				
 			<div id="tabs-menu"> 
   				<ul id="main-ul">
 				    <li class="main-li"><a class="main-a" href="#tabs-1">Gioco</a></li>
@@ -66,7 +70,7 @@
 			  				<form>  	
 								<div>
 									Rotazione scacchiera:     
-									<input type="checkbox" checked>
+									<input type="checkbox" checked id="switchRotation">
 									<div class="Switch Round">
 										<div class="Toggle"></div>
 									</div>
@@ -74,8 +78,8 @@
 									Modalit&agrave di gioco:    
 									<select id="blue">
 									    <option >Senza timer</option>
-									    <option>Timer mod. 1</option>
-									    <option>Timer mod. 2</option>
+									    <option>Timer1</option>
+									    <option>Timer2</option>
 									</select>
 								</div>		
 							</form>
@@ -114,12 +118,29 @@
 								<td align="center" id = "main-board-table-board">
 									<div id="main-board">
 									</div>
+
+
 								</td>
-								<td id="main-board-table-graveyard">
+								<td id="main-board-table-moveshistory">
 
 								</td>
 							</tr>
+							<table width="100%">
+								<tr>
+									<td align="center">
+										<div id="black-graveyard">
+									
+										</div>
+									</td>
+									<td align="center">
+										<div id="white-graveyard">
+									
+										</div>
+									</td>
+							</tr>
 						</table>
+							</table>
+							
 					</div>
 					<div id="footer">
 						<div id="footer-info">Sviluppato da: Daniele Genta - Estate 2015 </div>

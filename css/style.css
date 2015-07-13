@@ -395,7 +395,7 @@ select {
   width: 100%;
 }
 
-#main-board-table-countdown, #main-board-table-graveyard
+#main-board-table-countdown, #main-board-table-moveshistory
 {
   width: 25%;
 }
@@ -584,4 +584,32 @@ background-color: rgb(238, 238, 238);
 padding: 20px 30px;
 color: rgb(111, 111, 111);
 }
+
+/*
+* Graveyard
+*/
+#graveyards
+{
+   width: 100%;
+}
+#white-graveyard
+{
+  border: 2px solid white;
+  min-height: 200px;
+  width: 400px;
+  overflow: auto;
+}
+
+#black-graveyard
+{
+  border: 2px solid black;
+  min-height: 200px;
+  width: 400px;
+  overflow: auto;
+}
+
+/*
+* Moves history
+*/
+
 
