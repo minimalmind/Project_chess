@@ -1,10 +1,12 @@
 /**************************************************************
-******Script - Developed by: Daniele Genta - Summer 2015********
+******Main Script - Developed by: Daniele Genta - Summer 2015********
 ***************************************************************/
 var nowPlaying = "white";
 var playerName1, playerName2;
 var selectedTimerMode;
 var isRotable;
+
+var stillHighlighted = false;
 
 $(document).ready(function()
 {
@@ -113,6 +115,8 @@ $(document).ready(function()
 	});
 });
 
+
+
 //Initialize the page 
 function init()
 {
@@ -157,6 +161,8 @@ function createBoard()
 		}
 		colorBlack = !colorBlack;
     }
+
+    
 }
 
 //Create a cell of the board dinamically
@@ -166,10 +172,13 @@ function createCell(cellAppendTo, cellClass, id)
 
 	cell = $('<div />');
     cell.attr("id",id);
+
+    cell.attr("hover" , "hoverPiece(" +id+ ")" );
+
     cell.addClass(cellClass);
     $(cellAppendTo).append(cell);
-
 }
+
 
 //First function used to switch the position of the piece i am going to show
 function asignCellImageO(i, j)
