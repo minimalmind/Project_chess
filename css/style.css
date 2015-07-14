@@ -14,6 +14,11 @@
   min-height: 768px;
 }
 
+.main
+{
+  background-color: #9E9E9E; 
+}
+
 #main-board
 {
 	height: 680px;
@@ -241,14 +246,11 @@ input:focus ~ .highlight {
 
 
 
-.main
-{
-	background-color: #9E9E9E; 
-}
+
 
 /*
-****************FOOTER
-*********/
+****************FOOTER*****************
+*/
 #footer
 {
   width: 100%;
@@ -260,11 +262,9 @@ input:focus ~ .highlight {
   margin: 0 auto;
 }
 
-
-
-/*------------------------------------------------*/
-/* Switch SECTION START*/
-/*------------------------------------------------*/
+/*
+* Switch intro-page-options
+*/
 .Switch {
   position: relative;
   display: inline-block;
@@ -379,11 +379,13 @@ select {
           transition:0.3s ease all;
 }
 
-#blue {
+#blue 
+{
   background-color: white;
 }
 
-#blue:hover {
+#blue:hover 
+{
   background-color:#4285f4;
   color:white;
 }
@@ -407,10 +409,8 @@ select {
 }
 
 
-
-
 /*
-* Tabs
+************ Tabs both main and info *****************************
 */
 #main-ul {
   font-size: 0;
@@ -520,8 +520,6 @@ rippleDrop {  100% {
 }
 }
 
-
-
 #tabs-menu
 {
   width: 100%;
@@ -536,7 +534,7 @@ rippleDrop {  100% {
 }
 
 /*
-* Who is playing and is color
+*************** Who is playing and is color | Main page game, left sidebar ***************
 */
 #turnTable
 {
@@ -563,7 +561,7 @@ rippleDrop {  100% {
 }
 
 /*
-* Flat table stats
+**************************** Flat table stats *********************
 */
 .example-table {
 margin: 10% auto;
@@ -587,7 +585,7 @@ color: rgb(111, 111, 111);
 }
 
 /*
-* Graveyard
+****************** Graveyard ************************************
 */
 #graveyards
 {
@@ -610,8 +608,10 @@ color: rgb(111, 111, 111);
 }
 
 /*
-* Moves history
+*********************** Moves history ****************************
 */
+
+/*Part which can hide*/
 #slider
 {
   background-color: #424242;
@@ -624,7 +624,7 @@ color: rgb(111, 111, 111);
   text-align: center;
 }
 
-
+/*Trigger that enable the slider (it's a button)*/
 #trigger
 {
     position:fixed;

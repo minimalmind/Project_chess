@@ -120,18 +120,16 @@ $(document).ready(function()
 //Initialize the page 
 function init()
 {
-	
 	$("#game-page").hide();
 	$("#intro-page-options").hide();
 
+	//Slider activation
 	$(function($) {
   		var slider = $("#slider").slideReveal({
   		trigger: $("#trigger"),
   		position: "right"
-  	});
-});
-
-
+  		});
+	});
 }
 
 //Dynamic creation of the chess board 
@@ -246,7 +244,6 @@ function showIntroPageOptions()
 //Initialize the game
 function gameStart()
 {
-
 	gameConfig();
 
 	$("#intro-page-options").hide();
@@ -267,6 +264,7 @@ function gameStart()
 	document.title = "\u25B6 Project Chess";
 }
 
+//Function which save the option selected in the intro-page-option section
 function gameConfig()
 {
 	selectedTimerMode = $("select").val();
@@ -279,6 +277,7 @@ function gameConfig()
 		isRotable = true;
 }
 
+//Function which enable (or not) tbe timer
 function manageTimer()
 {
 	var runTime;
@@ -303,7 +302,7 @@ function manageTimer()
 }
 
 /********************************************************************************
-***************************************Events drag, drop*************************
+*************************************** Events drag, drop *************************
 *********************************************************************************/
 
 //Set the attribute draggable using jQuery
@@ -324,6 +323,7 @@ function setDrag()
 	setDragTurn();
 }
 
+//Function that enable the drag prop only on the pieces which have the turn color
 function setDragTurn()
 {
 	var myValue;
@@ -340,6 +340,7 @@ function setDragTurn()
 	}
 }
 
+//Function which manage the turn color and the other functions liked
 function manageTurn()
 {
 	if (nowPlaying == "white")
@@ -347,7 +348,6 @@ function manageTurn()
 		$("#whoisplaying-table-name").html(playerName2);
 		$("#whoisplaying-table-color-support").css("background-color", "black");
 		nowPlaying = "black";
-
 	}
 	else
 	{
@@ -921,6 +921,7 @@ function capturePiece()
 	//  .....
 }
 
+//Function which send the captured piece to the right graveyard
 function appendToGraveyard(id)
 {
 	var value = ($(id).find("img").attr("value"));
