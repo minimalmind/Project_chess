@@ -622,6 +622,7 @@ color: rgb(111, 111, 111);
   line-height: 32px;
   padding-top: 10%;
   text-align: center;
+  overflow: auto;
 }
 
 /*Trigger that enable the slider (it's a button)*/

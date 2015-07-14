@@ -1,6 +1,6 @@
 Non risolti:
 
-10/7   	pedoni non catturano
+	Cavallo si autospedisce nel cimitero
 
 
 
@@ -8,3 +8,4 @@ Non risolti:
 Risolti:
 	7/7 Cavallo mangia tutti (alleati)
 	Bug nei movimenti di alcuni pezzi (checkO)
+	10/7   	pedoni non catturano

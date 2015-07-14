@@ -5,8 +5,7 @@ var nowPlaying = "white";
 var playerName1, playerName2;
 var selectedTimerMode;
 var isRotable;
-
-var stillHighlighted = false;
+var buffer;
 
 $(document).ready(function()
 {
@@ -401,6 +400,7 @@ function setDrop()
 						$("#"+pIdDrag).append(supportCell);
 						//Updating the dropabble property
 
+						publishMove();
 
 						setDrop();
 						manageTurn();
@@ -470,6 +470,7 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 			allowDrop = true;
 	}
+
 return allowDrop;
 }
 
@@ -513,6 +514,7 @@ function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //
 	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
 
+	
 	return allowDrop;
 }
 
@@ -556,8 +558,10 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 	nMoves = 4;
 
 	if (checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
+	{
 		allowDrop = true;
-
+		
+	}
 	return allowDrop;
 }
 
@@ -645,19 +649,19 @@ function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, d
 	switch (destination)
 	{
 		case "up":
-			if (supportObstacle((rowSource - delta), columnSource, rowDest, columnDest, myValue, myClass))
+			if (supportObstacle((rowSource - delta), columnSource, rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 			break;
 		case "down":
-			if (supportObstacle((rowSource + delta), columnSource, rowDest, columnDest, myValue, myClass))
+			if (supportObstacle((rowSource + delta), columnSource, rowDest, columnDest, myValue, myClass,rowSource, columnSource))
 				return true;
 			break;
 		case "left":
-			if (supportObstacle(rowSource, (columnSource - delta), rowDest, columnDest, myValue, myClass))
+			if (supportObstacle(rowSource, (columnSource - delta), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 			break;
 		case "right":
-			if (supportObstacle(rowSource, (columnSource + delta), rowDest, columnDest, myValue, myClass))
+			if (supportObstacle(rowSource, (columnSource + delta), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 			break;
 	}
@@ -665,7 +669,7 @@ function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, d
 }
 
 //Function which actually analyze the obstacle and manage the moves
-function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass)
+function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass, rowSource, columnSource)
 {
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+columnObstacle).find("img").attr("class"));
@@ -679,8 +683,15 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 	if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
 		return true;
 	else if (obstacleValue != undefined)
+	{
 		appendToGraveyard(obstacleID);
+		//Register complex move - capturing piece
+		registerSimpleMove(rowDest, columnDest,rowSource, columnSource, true);
+		return false;
+	}
 
+	//if there are no obstacle, i register a simple move
+	registerSimpleMove(rowDest, columnDest,rowSource, columnSource, false);
 	return false;
 }
 
@@ -797,45 +808,48 @@ function isObstacolatedOblique(rowSource, rowDest, columnSource, columnDest, des
 	switch (destination)
 	{
 		case "ul":
-		{
-			 if (supportObstacleOblique((rowSource - i), (columnSource - i), rowDest, columnDest, myValue, myClass))
+			 if (supportObstacleOblique((rowSource - i), (columnSource - i), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 			 	return true;
-		}
 		break;
 
 		case "ur":
-			if (supportObstacleOblique((rowSource - i), (columnSource + i), rowDest, columnDest, myValue, myClass))
+			if (supportObstacleOblique((rowSource - i), (columnSource + i), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 		break;
 
 		case "dl":
-			if (supportObstacleOblique((rowSource + i), (columnSource - i), rowDest, columnDest, myValue, myClass))
+			if (supportObstacleOblique((rowSource + i), (columnSource - i), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 		break;
 
 		case "dr":
-			if (supportObstacleOblique((rowSource + i), (columnSource +i), rowDest, columnDest, myValue, myClass))
+			if (supportObstacleOblique((rowSource + i), (columnSource +i), rowDest, columnDest, myValue, myClass, rowSource, columnSource))
 				return true;
 		break;
 	}
+
 	return false;
 }
 
 //Support function which actually detect the obstacle
-function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass)
+function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest, myValue, myClass, rowSource, columnSource)
 {
-	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
-	obstacleClass = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("class"));
-	obstacleID = "#d"+(rowObstacle)+""+columnObstacle;
+	var obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
+	var obstacleClass = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("class"));
+	var obstacleID = "#d"+(rowObstacle)+""+columnObstacle;
+	var myID = "#d"+rowSource+""+columnSource;
 
-
-	if (obstacleValue == myValue)				
+	if (obstacleValue == myValue)		
 		return true;
 	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
-		return true;
+		return true;	
 	if (obstacleValue != undefined)
+	{
 		appendToGraveyard(obstacleID);
-
+		registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
+		return false;
+	}
+	registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
 	return false;
 }
 
@@ -896,7 +910,8 @@ function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 */
 function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource, columnDest)
 {
-	var obstacleID = "#d"+rowSource+""+columnSource;
+	var myID = "#d"+rowSource+""+columnSource;
+	var obstacleID = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("id"));
 	var obstacleValue = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("value"));
 	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 
@@ -905,10 +920,15 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 	else if ((rowSource == rowDest+deltaRows) && (columnSource == columnDest + deltaColumns))
 	{
 		if (obstacleValue != undefined)
+		{
 			appendToGraveyard(obstacleID);
+			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
+			return true;
+		}
+		else if (obstacleValue == undefined)
+			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
 		return true;
-	}
-		
+	}	
 	return false;
 }
 
@@ -931,6 +951,90 @@ function appendToGraveyard(id)
 		$("#white-graveyard").append(($(id).find("img")));
 }
 
+//**************************************************************************************WORK IN PROGRESS********************************************************
+
+//Function that save the move
+function registerSimpleMove(rowDrop, columnDrop, rowSource, columnSource, capturing)
+{
+	var rowDest = parseInt(rowDrop);
+	var columnDest = parseInt(columnDrop);
+
+	var myID = "#d"+rowSource+""+columnSource;
+	var myValue = $(myID).find("img").attr("value");
+
+	var register = "";
+
+	//Using source coordinates beacause the piece hasn't been moved yet 
+	if (myValue == "black")
+		register = "...";
+	register += identifyPiece(myID);
+	console.log(capturing);
+	if (capturing == true)
+		register += "x";
+	register += findCoordinates(rowDest, columnDest)
+
+	buffer = register;
+}
 
 
+//Function that publish the move saved
+function publishMove()
+{
+	$("#slider").append("<p>"+buffer+"<\p>");
+}
 
+//Function that helps me to find the x and y official alias for the coordinates
+function findCoordinates(row, column)
+{
+	var cX, cY, coordinates = "";
+
+	//Column conversion
+	if (column == 0)
+		cX = "a";
+	else if (column == 1)
+		cX = "b";
+	else if (column == 2)
+		cX = "c";
+	else if (column == 3)
+		cX = "d";
+	else if (column == 4)
+		cX = "e";
+	else if (column == 5)
+		cX = "f";
+	else if (column == 6)
+		cX = "g";
+	else if (column == 7)
+		cX = "h";
+
+	//Row conversion (official notation is the opposite of my notation)
+	cY = 8 - row;
+
+	coordinates = cX + "" + cY;
+
+	return coordinates;
+}
+
+//Function that helps me to find the official acronymous of the pieces
+function identifyPiece(id)
+{
+	var retVal = "";
+	var myClass = $(id).find("img").attr("class");
+	
+	if (myClass != "black-pawn" && myClass != "white-pawn")
+	{
+		if (myClass == "queen")
+			retVal = "D";
+		else if (myClass == "king")
+			retVal = "R";
+		else if (myClass == "horse")
+			retVal = "C";
+		else if (myClass == "tower")
+			retVal = "T"
+		else if (myClass == "bishop")
+			retVal = "A"
+	}
+	return retVal;
+}
+
+
+//location.reload
