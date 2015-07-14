@@ -7,9 +7,11 @@ var selectedTimerMode;
 var isRotable;
 var buffer;
 
+var isHighlighting = false;
+var Interval;
+
 $(document).ready(function()
 {
-
 	//Initialize the project
 	init();
 	$("#tabs").tabs();
@@ -116,6 +118,7 @@ $(document).ready(function()
 
 
 
+
 //Initialize the page 
 function init()
 {
@@ -157,9 +160,7 @@ function createBoard()
         	colorBlack = !colorBlack;
 		}
 		colorBlack = !colorBlack;
-    }
-
-    
+    }    
 }
 
 //Create a cell of the board dinamically
@@ -170,12 +171,18 @@ function createCell(cellAppendTo, cellClass, id)
 	cell = $('<div />');
     cell.attr("id",id);
 
-    cell.attr("hover" , "hoverPiece(" +id+ ")" );
+    //Adding the hover event only in the middle-layer-cells
+    if (id.substring(0,1)=="d")
+    {
+    	cell.attr("onmouseover" , "mouseOn(" +id+ ")" );
+    	cell.attr("onmouseout" , "mouseOut(" +id+ ")" );
+
+    }
+    	
 
     cell.addClass(cellClass);
     $(cellAppendTo).append(cell);
 }
-
 
 //First function used to switch the position of the piece i am going to show
 function asignCellImageO(i, j)
@@ -253,13 +260,12 @@ function gameStart()
 
 	//Creation of the chess boards 
 	createBoard();
-
 	//Set the function drag on the chess set
 	setDrag();
 	setDrop();
-
+	//Init the timer
 	manageTimer();
-
+	//Play simbol in the title
 	document.title = "\u25B6 Project Chess";
 }
 
@@ -376,9 +382,6 @@ function setDrop()
 		    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
 		    		if (allowDrop == true)
 		    		{
-
-		    			
-
 			    		//Removing the drop middle layer and adding the new layer with the image
 			    		$( "#"+idDrop ).children().remove();
 			    		$( "#"+idDrag).css("top","");
@@ -471,7 +474,7 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 			allowDrop = true;
 	}
 
-return allowDrop;
+	return allowDrop;
 }
 
 //Allow the drop of a white pawn
@@ -479,7 +482,6 @@ return allowDrop;
 function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //TO EDIT
 {
 	allowDrop = false;
-
 	var nMoves;
 
 	//If is the 1st move (can move 2 cells)
@@ -500,7 +502,7 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 			allowDrop = true;
 	}
-return allowDrop;
+	return allowDrop;
 }
 
 //Allow the drop of the kings
@@ -513,7 +515,6 @@ function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop) //
 		allowDrop = true;
 	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
 		allowDrop = true;
-
 	
 	return allowDrop;
 }
@@ -558,10 +559,7 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop)
 	nMoves = 4;
 
 	if (checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves))
-	{
 		allowDrop = true;
-		
-	}
 	return allowDrop;
 }
 
@@ -582,13 +580,9 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 	var myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 	i = 1;
 	safetyReturn = true;
-
-	//alert("ok");
-
 	while (i <= howManyMoves)
 	{
-	//all the pieces calling this functions can go up
-		
+		//all the pieces calling this functions can go up
 		if (canGoUp && (columnSource == columnDest) && rowSource > rowDest)
 		{
 			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "up", i, myClass))
@@ -599,7 +593,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 					return true;
 			}			
 		}
-
 		if (canGoDown && (columnSource == columnDest) && rowSource < rowDest)
 		{
 			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "down", i, myClass))
@@ -610,7 +603,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 					return true;
 			}
 		}
-
 		if (canGoLeft && (rowSource == rowDest) && columnSource > columnDest)
 		{
 			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "left", i, myClass))
@@ -621,7 +613,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 					return true;
 			}
 		}
-
 		if (canGoRight && (rowSource == rowDest) && columnSource < columnDest)
 		{
 			if (isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, "right", i, myClass))
@@ -632,7 +623,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 					return true;
 			}
 		}
-
 		if (safetyReturn == false)
 			return false;
 		i++;
@@ -687,10 +677,16 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 		appendToGraveyard(obstacleID);
 		//Register complex move - capturing piece
 		registerSimpleMove(rowDest, columnDest,rowSource, columnSource, true);
+
+		isKingUnderAttack();
+		
 		return false;
 	}
 
 	//if there are no obstacle, i register a simple move
+
+	isKingUnderAttack();
+
 	registerSimpleMove(rowDest, columnDest,rowSource, columnSource, false);
 	return false;
 }
@@ -723,7 +719,7 @@ function checkDestination(rowSource, rowDest, columnSource, columnDest, destinat
 //Is it the right spot? ok make the move
 function supportDestination(rowNow, columnNow, rowDest, columnDest)
 {
-	if (rowNow == rowDest && columnNow == columnDest)
+	if (rowNow == rowDest && columnNow == columnDest)									
 		return true;
 	return false;
 }
@@ -737,14 +733,11 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
-
 	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 	var myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
 	var safetyReturn = true;
 
 	i = 1;
-
-
 //--
 	while (i <= howManyMoves)
 	{
@@ -827,7 +820,6 @@ function isObstacolatedOblique(rowSource, rowDest, columnSource, columnDest, des
 				return true;
 		break;
 	}
-
 	return false;
 }
 
@@ -846,9 +838,15 @@ function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest
 	if (obstacleValue != undefined)
 	{
 		appendToGraveyard(obstacleID);
+
+		isKingUnderAttack();
+
 		registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
 		return false;
 	}
+
+	isKingUnderAttack();
+
 	registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
 	return false;
 }
@@ -887,9 +885,7 @@ function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves)
 	var rowDest = parseInt(rowDrop);
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
-
 	var r, c;
-
 	//Each combination of the horse moves have a deltaR and a deltaC between -2 and 2
 	for (r = -2; r <= 2; r++)
 	{
@@ -922,11 +918,18 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 		if (obstacleValue != undefined)
 		{
 			appendToGraveyard(obstacleID);
+
+			isKingUnderAttack();
+
 			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
 			return true;
 		}
 		else if (obstacleValue == undefined)
+		{
+			isKingUnderAttack();
+
 			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
+		}
 		return true;
 	}	
 	return false;
@@ -958,7 +961,6 @@ function registerSimpleMove(rowDrop, columnDrop, rowSource, columnSource, captur
 {
 	var rowDest = parseInt(rowDrop);
 	var columnDest = parseInt(columnDrop);
-
 	var myID = "#d"+rowSource+""+columnSource;
 	var myValue = $(myID).find("img").attr("value");
 
@@ -968,7 +970,6 @@ function registerSimpleMove(rowDrop, columnDrop, rowSource, columnSource, captur
 	if (myValue == "black")
 		register = "...";
 	register += identifyPiece(myID);
-	console.log(capturing);
 	if (capturing == true)
 		register += "x";
 	register += findCoordinates(rowDest, columnDest)
@@ -1005,7 +1006,6 @@ function findCoordinates(row, column)
 		cX = "g";
 	else if (column == 7)
 		cX = "h";
-
 	//Row conversion (official notation is the opposite of my notation)
 	cY = 8 - row;
 
@@ -1036,5 +1036,37 @@ function identifyPiece(id)
 	return retVal;
 }
 
+function isKingUnderAttack()
+{
 
-//location.reload
+}
+
+
+function mouseOn(id)
+{
+	//first control, do only if the cell contains a piece
+	cellClass = $( id ).find("img").attr("class");
+	if (cellClass != undefined && isHighlighting == false)
+	{
+		//Step 2: wait 1 second
+		isHighlighting = true;
+		Interval =setInterval(function(){ $( id ).effect( "highlight" );isHighlighting=false; clearInterval(Interval); }, 1000);
+
+	}
+}
+
+function mouseOut(id)
+{
+	
+	cellClass = $( id ).find("img").attr("class");
+	if (cellClass != undefined && isHighlighting == true)
+	{
+		clearInterval(Interval);	
+		isHighlighting = false;
+	}
+}
+
+
+
+
+//! location.reload -> ricaricare pagina, utilizzare dopo la vittoria
