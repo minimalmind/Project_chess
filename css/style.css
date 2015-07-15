@@ -25,7 +25,6 @@
 	width: 680px;
 	vertical-align: middle;
 	margin: 0 auto; 	
-  border: 2px solid black;
 }
 
 
@@ -41,13 +40,12 @@
 	color: white;
   vertical-align: middle;
   margin-top: 0 auto;
-
 }
 
 .main-board-drag-cell
 {
-  height: 80px;
-  width: 80px;
+  height: 100%;
+  width: 100%;
   position: relative;
   vertical-align: middle;
   display: inline-block;
@@ -617,13 +615,20 @@ color: rgb(111, 111, 111);
 {
   background-color: #424242;
   color: white;
+
+
   font-family: 'Open Sans', sans-serif; 
   font-size: 15px;
   font-weight: 300; 
   line-height: 32px;
-  padding-top: 10%;
+  padding-top: 5%;
   text-align: center;
   overflow: auto;
+}
+
+#slider p
+{
+  color: #111;
 }
 
 /*Trigger that enable the slider (it's a button)*/

@@ -115,18 +115,19 @@ $(document).ready(function()
 		  }).addClass("rippleEffect");
 	});
 
-      $("#main-board").resizable({
+	//Resizable property
+    $("#main-board").resizable({
+    	//top handler
       	 handles: {
         'sw': '#swgrip',
     },
+    //Aspect ratio keep the board squared
     aspectRatio: 1 / 1,
       maxHeight: 800,
       maxWidth: 800,
       minHeight: 600,
       minWidth: 600
     });
-
-
 });
 
 
@@ -179,25 +180,47 @@ function createBoard()
 //Create a cell of the board dinamically
 function createCell(cellAppendTo, cellClass, id)
 {
-	var cell;
+	var cell, timer, allowHighlight;
 
 	cell = $('<div />');
     cell.attr("id",id);
-
-    //Adding the hover event only in the middle-layer-cells
-    //if (id.substring(0,1)=="d")
-    //{
-    //	cell.attr("onmouseover" , "mouseOn('" +id+ "'')" );
-    //	cell.attr("onmouseout" , "mouseOut('" +id+ "'')" );
-    //}
     cell.addClass(cellClass);
     $(cellAppendTo).append(cell);
+
+    //setting the hover only on the trasparent layer
+    var pID = id.substring(1,3);
+    
+    if (id.substring(0,1) == "d")
+    {
+	    $("#"+pID).hover(function ()
+	    {
+	    	if ($("#"+pID).children().find("img").attr("class") != undefined)
+	    	{
+
+	    		timer = setInterval(function(){ 
+	    			allowHighlight = checkPiece(allowHighlight, id, "", true); 
+	    			if (allowHighlight)
+	    			{
+	    				$("#"+id).effect("highlight");
+	    				clearInterval(timer);
+	    			}
+	    			else
+	    				clearInterval(timer);
+	    				
+	    			}, 1000);
+	    	}	
+		}, 
+		function ()
+		{
+	    	clearInterval(timer);
+		});
+	}
 }
 
 //First function used to switch the position of the piece i am going to show
 function asignCellImageO(i, j)
 {
-		//Using the class to recognize the images - no difference between black and white queens and kings (same moves)
+	//Using the class to recognize the images - no difference between black and white queens and kings (same moves)
 	//black pawns
 	if (i==1)
 		supportAsignCellImage(i, j, "black", "pawn");
@@ -374,7 +397,7 @@ function manageTurn()
 	setDragTurn();
 	manageTimer();
 	
-	manageRotation();
+	//manageRotation();
 }
 
 //Set all the empty cells droppable
@@ -391,7 +414,7 @@ function setDrop()
 		    		idDrop=$(this).parent().attr("id");	
 		    		idDrag=ui.draggable.attr("id");
 		    		pIdDrag = ui.draggable.parent().attr("id");;
-		    		allowDrop = checkPiece(allowDrop, idDrag, idDrop);
+		    		allowDrop = checkPiece(allowDrop, idDrag, idDrop, false);
 		    		if (allowDrop == true)
 		    		{
 			    		//Removing the drop middle layer and adding the new layer with the image
@@ -413,14 +436,12 @@ function setDrop()
 	    				supportCell.attr("class","middle-layer");
 	    				supportCell.addClass(supportCellClass);
 						$("#"+pIdDrag).append(supportCell);
-						//Updating the dropabble property
-
+						//Updating the history moves
 						publishMove();
-
+						//Updating the dropabble property
 						setDrop();
+						//Updating the turn config
 						manageTurn();
-
-
 					}
 				}
 			});
@@ -432,35 +453,229 @@ function setDrop()
 ************************* Manage the pieces *******************************
 *************************************************************************/
 
-function checkPiece(allowDrop, idDrag, idDrop)
+function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 {
 	var rowDrag = idDrag.substring(1,2);
 	var columnDrag =  idDrag.substring(2,3);
-	var rowDrop =  idDrop.substring(0,1);
-	var columnDrop =  idDrop.substring(1,2);
+	if (justHighlight == true)
+	{
+		var allowHighlight = false;
 
-	allowDrop = false;
+		var rowSource = parseInt(rowDrag);
+		var columnSource = parseInt(columnDrag);
+		
+		//CHECK HIGHLIGHT
+		checkHighlight(rowSource, columnSource, allowHighlight, idDrag);
 
-	//Check pawns
-	if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
-		allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
-		allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	//Check kings
-	if ($("#"+idDrag).find("img").attr("class") == "king")
-		allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	//Check queens
-	if ($("#"+idDrag).find("img").attr("class") == "queen")
-		allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	if ($("#"+idDrag).find("img").attr("class") == "bishop")
-		allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	if ($("#"+idDrag).find("img").attr("class") == "tower")
-		allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
-	if ($("#"+idDrag).find("img").attr("class") == "horse")
-		allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		return allowHighlight;
+	}
+	else
+	{
+		var rowDrop =  idDrop.substring(0,1);
+		var columnDrop =  idDrop.substring(1,2);
+
+		allowDrop = false;
+
+		//Check pawns
+		if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
+			allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
+			allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		//Check kings
+		if ($("#"+idDrag).find("img").attr("class") == "king")
+			allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		//Check queens
+		if ($("#"+idDrag).find("img").attr("class") == "queen")
+			allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		if ($("#"+idDrag).find("img").attr("class") == "bishop")
+			allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		if ($("#"+idDrag).find("img").attr("class") == "tower")
+			allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
+		if ($("#"+idDrag).find("img").attr("class") == "horse")
+			allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop);
 	
-	return allowDrop;
+		return allowDrop;
+	}
 }	
+
+function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
+{
+	var rowDrag = idDrag.substring(1,2);
+	var columnDrag =  idDrag.substring(2,3);
+	var i;
+
+	//pawns
+	if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
+	{
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, -1, 0);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, -2, 0);
+	}
+	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
+	{
+		if (checkBlackPawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, 1, 0);
+		if (checkBlackPawnsMoves(rowDrag, (rowSource + 2), columnDrag, (columnSource), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, 2, 0);
+	}
+	//towers
+	if ($("#"+idDrag).find("img").attr("class") == "tower")
+	{
+		//vertical
+		for (i = -8; i <= 8; i++)
+		{
+			if (checkTowersMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, i, 0);
+		}
+		//horizontal
+		for (i = -8; i <= 8; i++)
+		{
+			if (checkTowersMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, 0, i);
+		}
+	}
+	//queen
+	if ($("#"+idDrag).find("img").attr("class") == "queen")
+	{
+		//vertical
+		for (i = -8; i <= 8; i++)
+		{
+			if (checkQueensMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, i, 0);
+		}
+		//horizontal
+		for (i = -8; i <= 8; i++)
+		{
+			if (checkQueensMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, 0, i);
+		}
+		//add oblique...
+		for (i = -8; i <= 8; i++)
+		{
+			for (j = -8; j < 8; j++)
+			{
+				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+		for (i = 8; i >= 0; i--)
+		{
+			for (j = -8; j < 8; j++)
+			{
+				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+	}
+	//king
+	if ($("#"+idDrag).find("img").attr("class") == "queen")
+	{
+		//vertical
+		for (i = -1; i <= 1; i++)
+		{
+			if (checkKingsMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, i, 0);
+		}
+		//horizontal
+		for (i = -1; i <= 1; i++)
+		{
+			if (checkKingsMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight))
+				supportCheckHighlight(rowSource, columnSource, 0, i);
+		}
+		//add oblique...
+		for (i = -1; i <= 1; i++)
+		{
+			for (j = -1; j < 1; j++)
+			{
+				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+		for (i = 1; i >= 0; i--)
+		{
+			for (j = -1; j < 1; j++)
+			{
+				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+	}
+	//bishop
+	if ($("#"+idDrag).find("img").attr("class") == "bishop")
+	{
+		//add oblique...
+		for (i = -8; i <= 8; i++)
+		{
+			for (j = -8; j < 8; j++)
+			{
+				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+		for (i = 8; i >= 0; i--)
+		{
+			for (j = -8; j < 8; j++)
+			{
+				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight))
+					supportCheckHighlight(rowSource, columnSource, i, j);
+			}
+		}
+	}
+	//horse (special moces)
+	if ($("#"+idDrag).find("img").attr("class") == "horse")
+	{
+
+		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource - 1), 4))
+			supportCheckHighlight(rowSource, columnSource, -2, -1);
+		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource +1), 4))
+			supportCheckHighlight(rowSource, columnSource, -2, 1);
+		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource + 1), 4))
+			supportCheckHighlight(rowSource, columnSource, 2, 1);
+		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource -1), 4))
+			supportCheckHighlight(rowSource, columnSource, 2, -1);
+
+		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource +2), 4))
+			supportCheckHighlight(rowSource, columnSource, 1, +2);
+		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource - 2), 4))
+			supportCheckHighlight(rowSource, columnSource, 1, -2);
+		if (checkHorseO(rowDrag, (rowSource - 1), columnDrag, (columnSource +2), 4))
+			supportCheckHighlight(rowSource, columnSource, -1, +2);
+		if (checkHorseO(rowDrag, (rowSource-1), columnDrag, (columnSource-2), 4))
+			supportCheckHighlight(rowSource, columnSource, -1, -2);
+	}
+}
+
+
+function supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns)
+{
+	var rowH = parseInt(rowSource);
+	var colH = parseInt(columnSource);
+	var dRowH = parseInt(deltaRows);
+	var dColH = parseInt(deltaColumns);
+
+	rowH += dRowH;
+	colH += dColH;
+
+	if  (rowH >= 0 && rowH <= 7 && colH >= 0 && colH <= 7 )
+	{
+		console.log("row:"+rowH+"/col:"+colH);
+		var idHighlight = "#d" + rowH + "" + colH;
+		var support;
+		
+		if (($("#"+rowH + "" + colH).children().find("img").attr("class")) != undefined)
+		{
+			conole.log("entrato");
+			support = $(idHighlight).children();
+
+			$(idHighlight).effect("highlight");
+			$(idHighlight).append(support);
+		}
+		else
+			$(idHighlight).effect("highlight");
+		allowHighlight = true;
+	}
+}
 
 //Allow the drop of a white pawn
 //to optimize
@@ -1056,34 +1271,9 @@ function isKingUnderAttack()
 }
 
 
-function mouseOn(id)
-{
-	var allowDrop;
-	//first control, do only if the cell contains a piece
-	cellClass = $( id ).find("img").attr("class");
-	if (cellClass != undefined && isHighlighting == false)
-	{
-		//Step 2: wait 1 second
-		isHighlighting = true;
-		Interval =setInterval(function(){
-			$( id ).effect( "highlight" );isHighlighting=false; clearInterval(Interval); 
 
-		}, 1000);
-
-	}
-}
-
-function mouseOut(id)
-{ 
-	cellClass = $( id ).find("img").attr("class");
-	if (cellClass != undefined && isHighlighting == true)
-	{
-		clearInterval(Interval);	
-		isHighlighting = false;
-	}
-}
-
-function manageRotation()
+//*****************************DOESNT WORK**************************
+/*function manageRotation()
 {
 	if (isRotable == true)
 	{
@@ -1100,9 +1290,8 @@ function manageRotation()
 			}
 		}
 		$("#main-board").removeClass("rotate")
-
 	}
-}
+}*/
 
 
 //! location.reload -> ricaricare pagina, utilizzare dopo la vittoria
