@@ -1,0 +1,153 @@
+function possiblePositions(idDrag)
+{
+	var rowDrag, columnDrag, idDrag, idDrop;
+	var rowDrop, columnDrop;
+	rowDrag = (idDrag.substring(1,2));
+	columnDrag =(idDrag.substring(2,3));
+
+	rowDrop = parseInt(rowDrag);
+	columnDrop = parseInt(columnDrag);
+	idDrop = (rowDrop) + "" + (columnDrop);
+
+	var myClass = $("#"+idDrag).find("img").attr("class");
+	clearPositionArray();
+	//console.log(idDrag);
+	if (myClass == "queen")
+	{
+		fillArrayPosition(8, 8, 8, 8, 8, idDrag);
+	}
+	else if (myClass == "king")
+	{
+		fillArrayPosition(1, 1, 1, 1, 1, idDrag);
+	}
+	else if (myClass == "horse")
+	{
+		//fillArrayPositionHorse();
+	}
+	else if (myClass == "tower")
+	{
+		fillArrayPosition(8, 8, 8, 8, 0, idDrag);
+	}
+	else if (myClass == "bishop")
+	{
+		fillArrayPosition(0, 0, 0, 0, 8, idDrag);
+	}
+	else if (myClass == "white-pawn")
+	{
+
+		fillArrayPosition(2, 0, 0, 0, 0, idDrag);
+	}
+	else if (myClass == "black-pawn")
+	{
+		fillArrayPosition(0, 2, 0, 0, 0, idDrag);
+	}
+}
+
+function clearPositionArray()
+{
+	if (position.length > 0)
+	{
+		for (i=0; i<position.length; i++)
+			position[i] = 0;
+	}
+}
+
+function fillArrayPosition(up, down, left, right, cross, idDrag)
+{
+	var i = 0, j =0;
+	rowDrag = (idDrag.substring(1,2));
+	columnDrag =(idDrag.substring(2,3));
+	rowDrop = parseInt(rowDrag);
+	columnDrop = parseInt(columnDrag);
+	var dropValue;
+
+	myValue = $("#"+idDrag).find("img").attr("value");
+
+	//add up moves
+	for (i = 0; i <= up; i++)
+	{
+		dropValue = $("#d"+(rowDrop - i)+""+(columnDrop)).find("img").attr("value")
+		if (dropValue == undefined || dropValue != myValue)
+		{
+			position[j] = (rowDrop - i )+""+columnDrop;
+			j++;
+		}
+	}
+	//down moves
+	for (i = 0; i <= down; i++)
+	{
+		dropValue = $("#d"+(rowDrop + i)+""+(columnDrop)).find("img").attr("value")
+		if (dropValue == undefined || dropValue != myValue)
+		{
+			position[j] = (rowDrop + i )+""+columnDrop;
+			j++;
+		}
+	}
+	//left
+	for (i = 0; i <= left; i++)
+	{
+		dropValue = $("#d"+(rowDrop)+""+(columnDrop-i)).find("img").attr("value")
+		if (dropValue == undefined || dropValue != myValue)
+		{
+			position[j] = (rowDrop)+""+(columnDrop + i);
+			j++;
+		}
+	}
+	//right
+	for (i = 0; i <= right; i++)
+	{
+		dropValue = $("#d"+(rowDrop)+""+(columnDrop+i)).find("img").attr("value")
+		if (dropValue == undefined || dropValue != myValue)
+		{
+			position[j] = (rowDrop - i )+""+(columnDrop - i);
+			j++;
+		}
+	}
+}
+
+
+function mouseOn(id)
+{
+	var allowDrop = false;
+	var i;
+	//first control, do only if the cell contains a piece
+	cellClass = $( "#"+id ).find("img").attr("class");
+	if (cellClass != undefined && isHighlighting == false)
+	{
+		//Step 2: wait 1 second
+		isHighlighting = true;
+		Interval =setInterval(function(){
+
+		possiblePositions(id);
+		
+		for (i = 0; i<position.length; i++ )
+		{
+			if (position[i] != 0)
+			{
+				console.log("posizione:" + i + "-" + position[i]);
+				$("#d"+position[i]).effect( "highlight" );
+			}
+			isHighlighting=false; 
+			clearInterval(Interval); 
+		}
+
+		}, 1000);
+
+
+		//tmp
+		for (i = 0; i < position.length; i++)
+		{
+			
+		}
+	}
+}
+
+function mouseOut(id)
+{ 
+	cellClass = $( id ).find("img").attr("class");
+	if (cellClass != undefined && isHighlighting == true)
+	{
+		clearInterval(Interval);	
+		isHighlighting = false;
+	}
+}

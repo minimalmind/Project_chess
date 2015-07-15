@@ -25,20 +25,22 @@
 	width: 680px;
 	vertical-align: middle;
 	margin: 0 auto; 	
+  border: 2px solid black;
 }
 
 
 
 .main-board-cell-black
 {
-	height: 80px;
-	width: 80px;
+	height: 12%;
+	width: 12%;
 	position: relative;
 	vertical-align: middle;
 	display: inline-block;
 	background-color: #302013;
 	color: white;
   vertical-align: middle;
+  margin-top: 0 auto;
 
 }
 
@@ -50,13 +52,12 @@
   vertical-align: middle;
   display: inline-block;
   vertical-align: middle;
-
 }
 
 .main-board-cell-white
 {
-	height: 80px;
-	width: 80px;
+	height: 12%;
+	width: 12%;
 	position: relative;
 	vertical-align: middle;
 	display: inline-block;
@@ -648,6 +649,22 @@ color: rgb(111, 111, 111);
     -ms-transform:rotate(-90deg);
     -o-transform:rotate(-90deg);
     -webkit-transform:rotate(-90deg);
+}
+
+.rotate {
+    -ms-transform: rotate(180deg); 
+    -webkit-transform: rotate(180deg); 
+    transform: rotate(180deg);
+  }
+
+
+#swgrip{
+   width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    bottom: 100%;
+    left: -5px;
 }
 
 

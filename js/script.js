@@ -114,6 +114,19 @@ $(document).ready(function()
 		    left: x + 'px'
 		  }).addClass("rippleEffect");
 	});
+
+      $("#main-board").resizable({
+      	 handles: {
+        'sw': '#swgrip',
+    },
+    aspectRatio: 1 / 1,
+      maxHeight: 800,
+      maxWidth: 800,
+      minHeight: 600,
+      minWidth: 600
+    });
+
+
 });
 
 
@@ -172,14 +185,11 @@ function createCell(cellAppendTo, cellClass, id)
     cell.attr("id",id);
 
     //Adding the hover event only in the middle-layer-cells
-    if (id.substring(0,1)=="d")
-    {
-    	cell.attr("onmouseover" , "mouseOn(" +id+ ")" );
-    	cell.attr("onmouseout" , "mouseOut(" +id+ ")" );
-
-    }
-    	
-
+    //if (id.substring(0,1)=="d")
+    //{
+    //	cell.attr("onmouseover" , "mouseOn('" +id+ "'')" );
+    //	cell.attr("onmouseout" , "mouseOut('" +id+ "'')" );
+    //}
     cell.addClass(cellClass);
     $(cellAppendTo).append(cell);
 }
@@ -363,6 +373,8 @@ function manageTurn()
 
 	setDragTurn();
 	manageTimer();
+	
+	manageRotation();
 }
 
 //Set all the empty cells droppable
@@ -407,6 +419,8 @@ function setDrop()
 
 						setDrop();
 						manageTurn();
+
+
 					}
 				}
 			});
@@ -1044,20 +1058,23 @@ function isKingUnderAttack()
 
 function mouseOn(id)
 {
+	var allowDrop;
 	//first control, do only if the cell contains a piece
 	cellClass = $( id ).find("img").attr("class");
 	if (cellClass != undefined && isHighlighting == false)
 	{
 		//Step 2: wait 1 second
 		isHighlighting = true;
-		Interval =setInterval(function(){ $( id ).effect( "highlight" );isHighlighting=false; clearInterval(Interval); }, 1000);
+		Interval =setInterval(function(){
+			$( id ).effect( "highlight" );isHighlighting=false; clearInterval(Interval); 
+
+		}, 1000);
 
 	}
 }
 
 function mouseOut(id)
-{
-	
+{ 
 	cellClass = $( id ).find("img").attr("class");
 	if (cellClass != undefined && isHighlighting == true)
 	{
@@ -1066,7 +1083,26 @@ function mouseOut(id)
 	}
 }
 
+function manageRotation()
+{
+	if (isRotable == true)
+	{
+		$("#main-board").addClass("rotate")
+		for (i = 0; i < 8; i++)
+		{
+			for (j=0; j<8; j++)
+			{
+				myValue = $("#d"+i+""+j).find("img").attr("value");
+				if (myValue != undefined)
+				{
+				$("#d"+i+""+j).find("img").addClass("rotate");
+				}
+			}
+		}
+		$("#main-board").removeClass("rotate")
 
+	}
+}
 
 
 //! location.reload -> ricaricare pagina, utilizzare dopo la vittoria
