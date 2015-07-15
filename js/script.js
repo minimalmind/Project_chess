@@ -511,6 +511,9 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 			supportCheckHighlight(rowSource, columnSource, -1, 0);
 		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight))
 			supportCheckHighlight(rowSource, columnSource, -2, 0);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, -2, 0);
+		
 	}
 	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
 	{
