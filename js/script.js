@@ -513,7 +513,13 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 			supportCheckHighlight(rowSource, columnSource, -2, 0);
 		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight))
 			supportCheckHighlight(rowSource, columnSource, -2, 0);
-		
+
+		//capturing
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource - 1), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, -1, -1);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource +1), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, -1, 1);
+
 	}
 	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
 	{
@@ -521,6 +527,12 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 			supportCheckHighlight(rowSource, columnSource, 1, 0);
 		if (checkBlackPawnsMoves(rowDrag, (rowSource + 2), columnDrag, (columnSource), allowHighlight))
 			supportCheckHighlight(rowSource, columnSource, 2, 0);
+
+		//capturing
+		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource + 1), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, 1, -1);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource +1), allowHighlight))
+			supportCheckHighlight(rowSource, columnSource, 1, 1);
 	}
 	//towers
 	if ($("#"+idDrag).find("img").attr("class") == "tower")
@@ -662,11 +674,16 @@ function supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns)
 
 	if  (rowH >= 0 && rowH <= 7 && colH >= 0 && colH <= 7 )
 	{
-		console.log("row:"+rowH+"/col:"+colH);
 		var idHighlight = "#d" + rowH + "" + colH;
 		var support;
+
+		if (($("#"+rowH + "" + colH).children().length) > 0 ) 
+		{
+			console.log($("#"+rowH + "" + colH).find("img"));
+		}
 		
-		if (($("#"+rowH + "" + colH).children().find("img").attr("class")) != undefined)
+		
+		if (($("#"+rowH + "" + colH).find("img").attr("class")) != undefined)
 		{
 			conole.log("entrato");
 			support = $(idHighlight).children();
