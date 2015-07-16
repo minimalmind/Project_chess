@@ -39,7 +39,7 @@ $(document).ready(function()
 	$( 'form' ).bind('keypress', function(e){
    		if ( e.keyCode == 13 ) {
      		$( this ).find( 'input[type=submit]:first' ).click();
-     		alert("Clicca sul bottone per iniziare la partita")
+     		alert("Clicca sul bottone per settare le impostazioni della partita")
    		}
  	});
 
@@ -307,10 +307,8 @@ function gameConfig()
 {
 	selectedTimerMode = $("select").val();
 	if ($('#switchRotation').is(":checked"))
-	{
   	// it is checked
   		isRotable = false;
-	}
 	else
 		isRotable = true;
 }
@@ -436,6 +434,9 @@ function setDrop()
 	    				supportCell.attr("class","middle-layer");
 	    				supportCell.addClass(supportCellClass);
 						$("#"+pIdDrag).append(supportCell);
+
+						rDrop = idDrop.substring(0,1);
+						cDrop = idDrop.substring(1,2);
 						//Updating the history moves
 						publishMove();
 						//Updating the dropabble property
@@ -464,7 +465,7 @@ function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 		var rowSource = parseInt(rowDrag);
 		var columnSource = parseInt(columnDrag);
 		//CHECK HIGHLIGHT
-		checkHighlight(rowSource, columnSource, allowHighlight, idDrag);
+		checkHighlight(rowSource, columnSource, idDrag);
 
 		return allowHighlight;
 	}
@@ -478,29 +479,55 @@ function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 
 		//Check pawns
 		if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
-			allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
-			allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		//Check kings
 		if ($("#"+idDrag).find("img").attr("class") == "king")
-			allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		//Check queens
 		if ($("#"+idDrag).find("img").attr("class") == "queen")
-			allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		if ($("#"+idDrag).find("img").attr("class") == "bishop")
-			allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		if ($("#"+idDrag).find("img").attr("class") == "tower")
-			allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 		if ($("#"+idDrag).find("img").attr("class") == "horse")
-			allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false);
+			allowDrop = checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, false, false);
 	
 		return allowDrop;
 	}
 }	
 
+
+//Support function for highlight
+function checkHighlight(rowSource, columnSource, idDrag)
+{
+	possibleMovesSwitcher(rowSource, columnSource, idDrag, true, false);
+}
+
+//support function for king under attack
+function isKingUnderAttack(rowSource, columnSource, idDrag)
+{
+	//possibleMovesSwitcher(rowSource, columnSource, idDrag, false, true);
+}
+
+function switcher(highlight, rowSource, columnSource, deltaRows, deltaColumns)
+{
+	
+	if (highlight)
+		supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns);
+	//else if (kingUnderAttack)
+		//do sth
+	//{}
+}
+
+
 //*********************************************************************TO OPTIMIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Double function: highlight + king under attack
 //Function which switch the piece and try to verify if there is an obstacle in any direction the piece could go
-function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
+//allowHighlight is USELESESS!!!
+function possibleMovesSwitcher(rowSource, columnSource, idDrag, highlight)
 {
 	var rowDrag = idDrag.substring(1,2);
 	var columnDrag =  idDrag.substring(2,3);
@@ -509,31 +536,29 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 	//pawns
 	if ($("#"+idDrag).find("img").attr("class") == "white-pawn")
 	{
-		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, -1, 0);
-		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, -2, 0);
-		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, -2, 0);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource), highlight))
+			switcher(highlight, rowSource, columnSource, -1, 0);	
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), highlight))
+			switcher(highlight, rowSource, columnSource, -2, 0);	
 		//capturing moves
-		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource - 1), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, -1, -1);
-		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource +1), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, -1, 1);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource - 1), highlight))
+			switcher(highlight, rowSource, columnSource, -1, -1);	
+		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource +1), highlight))
+			switcher(highlight, rowSource, columnSource, -1, 1);
 
 	}
 	if ($("#"+idDrag).find("img").attr("class") == "black-pawn")
 	{
-		if (checkBlackPawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, 1, 0);
-		if (checkBlackPawnsMoves(rowDrag, (rowSource + 2), columnDrag, (columnSource), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, 2, 0);
+		if (checkBlackPawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource), highlight))
+			switcher(highlight, rowSource, columnSource, 1, 0);
+		if (checkBlackPawnsMoves(rowDrag, (rowSource + 2), columnDrag, (columnSource), highlight))
+			switcher(highlight, rowSource, columnSource, 2, 0);
 
 		//capturing
-		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource + 1), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, 1, -1);
-		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource +1), allowHighlight, true))
-			supportCheckHighlight(rowSource, columnSource, 1, 1);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource + 1), highlight))
+			switcher(highlight, rowSource, columnSource, 1, -1);
+		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource +1), highlight))
+			switcher(highlight, rowSource, columnSource, 1, 1);
 	}
 	//towers
 	if ($("#"+idDrag).find("img").attr("class") == "tower")
@@ -541,14 +566,14 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 		//vertical
 		for (i = -8; i <= 8; i++)
 		{
-			if (checkTowersMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, i, 0);
+			if (checkTowersMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), highlight))
+				switcher(highlight, rowSource, columnSource, i, 0);
 		}
 		//horizontal
 		for (i = -8; i <= 8; i++)
 		{
-			if (checkTowersMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, 0, i);
+			if (checkTowersMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), highlight))
+				switcher(highlight, rowSource, columnSource, 0, i);
 		}
 	}
 	//queen
@@ -557,30 +582,30 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 		//vertical
 		for (i = -8; i <= 8; i++)
 		{
-			if (checkQueensMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, i, 0);
+			if (checkQueensMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), highlight))
+				switcher(highlight, rowSource, columnSource, i, 0);
 		}
 		//horizontal
 		for (i = -8; i <= 8; i++)
 		{
-			if (checkQueensMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, 0, i);
+			if (checkQueensMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), highlight))
+				switcher(highlight, rowSource, columnSource, 0, i);
 		}
 		//add oblique...
 		for (i = -8; i <= 8; i++)
 		{
 			for (j = -8; j < 8; j++)
 			{
-				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 		for (i = 8; i >= 0; i--)
 		{
 			for (j = -8; j < 8; j++)
 			{
-				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkQueensMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 	}
@@ -590,30 +615,30 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 		//vertical
 		for (i = -1; i <= 1; i++)
 		{
-			if (checkKingsMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, i, 0);
+			if (checkKingsMoves(rowDrag, (rowSource + i), columnDrag, (columnSource), highlight))
+				switcher(highlight, rowSource, columnSource, i, 0);
 		}
 		//horizontal
 		for (i = -1; i <= 1; i++)
 		{
-			if (checkKingsMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), allowHighlight, true))
-				supportCheckHighlight(rowSource, columnSource, 0, i);
+			if (checkKingsMoves(rowDrag, (rowSource), columnDrag, (columnSource + i), highlight))
+				switcher(highlight, rowSource, columnSource, 0, i);
 		}
 		//add oblique...
 		for (i = -1; i <= 1; i++)
 		{
 			for (j = -1; j < 1; j++)
 			{
-				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 		for (i = 1; i >= 0; i--)
 		{
 			for (j = -1; j < 1; j++)
 			{
-				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkKingsMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 	}
@@ -625,39 +650,39 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 		{
 			for (j = -8; j < 8; j++)
 			{
-				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 		for (i = 8; i >= 0; i--)
 		{
 			for (j = -8; j < 8; j++)
 			{
-				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), allowHighlight, true))
-					supportCheckHighlight(rowSource, columnSource, i, j);
+				if (checkBishopMoves(rowDrag, (rowSource+i), columnDrag, (columnSource + j), highlight))
+					switcher(highlight, rowSource, columnSource, i, j);
 			}
 		}
 	}
 	//horse (special moces)
 	if ($("#"+idDrag).find("img").attr("class") == "horse")
 	{
-		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource - 1), 4, true))
-			supportCheckHighlight(rowSource, columnSource, -2, -1);
-		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource +1), 4, true))
-			supportCheckHighlight(rowSource, columnSource, -2, 1);
-		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource + 1), 4, true))
-			supportCheckHighlight(rowSource, columnSource, 2, 1);
-		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource -1), 4, true))
-			supportCheckHighlight(rowSource, columnSource, 2, -1);
+		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource - 1), 4, highlight))
+			switcher(highlight, rowSource, columnSource, -2, -1);
+		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource +1), 4, highlight))
+			switcher(highlight, rowSource, columnSource, -2, 1);
+		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource + 1), 4, highlight))
+			switcher(highlight, rowSource, columnSource, 2, 1);
+		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource -1), 4, highlight))
+			switcher(highlight, rowSource, columnSource, 2, -1);
 
-		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource +2), 4, true))
-			supportCheckHighlight(rowSource, columnSource, 1, +2);
-		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource - 2), 4, true))
-			supportCheckHighlight(rowSource, columnSource, 1, -2);
-		if (checkHorseO(rowDrag, (rowSource - 1), columnDrag, (columnSource +2), 4, true))
-			supportCheckHighlight(rowSource, columnSource, -1, +2);
-		if (checkHorseO(rowDrag, (rowSource-1), columnDrag, (columnSource-2), 4, true))
-			supportCheckHighlight(rowSource, columnSource, -1, -2);
+		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource +2), 4, highlight))
+			switcher(highlight, rowSource, columnSource, 1, 2);
+		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource - 2), 4, highlight))
+			switcher(highlight, rowSource, columnSource, 1, -2);
+		if (checkHorseO(rowDrag, (rowSource - 1), columnDrag, (columnSource +2), 4, highlight))
+			switcher(highlight, rowSource, columnSource, -1, 2);
+		if (checkHorseO(rowDrag, (rowSource-1), columnDrag, (columnSource-2), 4, highlight))
+			switcher(highlight, rowSource, columnSource, -1, -2);
 	}
 }
 
@@ -685,6 +710,7 @@ function supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns)
 		}
 	}
 }
+
 
 //Allow the drop of a white pawn
 //to optimize
@@ -745,14 +771,14 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 }
 
 //Allow the drop of the kings
-function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, justHighlight) //TO EDIT
+function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, justHighlight, checkKingUnderAttack) //TO EDIT
 {
 	allowDrop = false;
 
 	nMoves = 1;
-	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true), justHighlight)
+	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true, justHighlight))
 		allowDrop = true;
-	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves), justHighlight)
+	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight))
 		allowDrop = true;
 	
 	return allowDrop;
@@ -874,6 +900,7 @@ function isObstacolated(myValue, rowSource, rowDest, columnSource, columnDest, d
 {
 	var obstacleValue, obstacleClass;
 
+
 	switch (destination)
 	{
 		case "up":
@@ -902,22 +929,35 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 	obstacleValue = ($("#d"+(rowObstacle)+""+ columnObstacle).find("img").attr("value"));
 	obstacleClass = ($("#d"+(rowObstacle)+""+columnObstacle).find("img").attr("class"));
 	obstacleID = "#d"+rowObstacle+""+columnObstacle;
-
 	if (obstacleValue == myValue)			
 		return true;
 	if ((myClass == "white-pawn" || myClass == "black-pawn") && obstacleValue != myValue && obstacleValue != undefined)
 		return true;
+	if (obstacleValue != undefined)
+	{
+		if (checkKingUnderAttack)
+		{
+			if (obstacleClass == "king")
+			{
+				console.log("re sotto attacco verticale o orizzontale");
+				return false;
+			}
+		}
+		else
+		{
+			if (justHighlight == false)
+			{
+				capturePiece(obstacleID);
+				appendToGraveyard(obstacleID);
+				//Register complex move - capturing piece
+				registerSimpleMove(rowDest, columnDest,rowSource, columnSource, true);
+				return false;
+			}
+
+		}
+	}
 	if (justHighlight == false)
 	{
-		if (obstacleValue != undefined)
-		{
-			appendToGraveyard(obstacleID);
-			//Register complex move - capturing piece
-			registerSimpleMove(rowDest, columnDest,rowSource, columnSource, true);
-			isKingUnderAttack();
-			return false;
-		}
-		isKingUnderAttack();
 		//if there are no obstacle, i register a simple move
 		registerSimpleMove(rowDest, columnDest,rowSource, columnSource, false);
 		return false;
@@ -1070,20 +1110,24 @@ function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest
 		return true;
 	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
 		return true;	
-	if (justHighlight == false)
-	{
-		if (obstacleValue != undefined)
-		{
-			appendToGraveyard(obstacleID);
-			isKingUnderAttack();
-			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
+
+		if (justHighlight == false)
+		{	
+			if (obstacleValue != undefined)
+			{
+
+					capturePiece(obstacleID);
+					appendToGraveyard(obstacleID);
+					
+					registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
+					return false;
+				
+			}
+			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
 			return false;
-		}
-		isKingUnderAttack();
-		registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
-		return false;
-	}
-	return false;
+		}	
+		else
+			return false;
 }
 
 //First function which detect the destination
@@ -1145,6 +1189,7 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 	var obstacleID = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("id"));
 	var obstacleValue = ($("#d"+(rowSource - deltaRows)+""+(columnSource - deltaColumns)).find("img").attr("value"));
 	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
+	var allowKingUnderAttack;
 
 	if (obstacleValue == myValue)
 		return false;
@@ -1154,21 +1199,20 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 		{
 			if (justHighlight == false)
 			{
+				capturePiece(obstacleID);
 				appendToGraveyard(obstacleID);
-				isKingUnderAttack();
 				registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
+				return true;
 			}
-			return true;
-		}
+		}	
 		else if (obstacleValue == undefined)
 		{
 			if (justHighlight == false)
 			{
-				isKingUnderAttack();
 				registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
+				return true;
 			}
 		}
-		return true;
 	}	
 	return false;
 }
@@ -1176,9 +1220,10 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 /*
 * Function that manage the capturing of a piece
 */
-function capturePiece()
+function capturePiece(idCaptured)
 {
-	console.log("Capturing piece!");
+	if ($(idCaptured).find("img").attr("class") == "king")
+		alert("Fine partita");
 }
 
 //Function which send the captured piece to the right graveyard
@@ -1271,11 +1316,6 @@ function identifyPiece(id)
 			retVal = "A"
 	}
 	return retVal;
-}
-
-function isKingUnderAttack()
-{
-
 }
 
 //*****************************DOESNT WORK**************************

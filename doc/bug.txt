@@ -1,7 +1,10 @@
 Non risolti:
 
-	Cavallo si autospedisce nel cimitero
-	Highlight cancella gli avversari sulla sua via
+	Cavallo si autospedisce nel cimitero (risolto?)
+	Non sono suggerite le mosse dei re
+	Suggerimenti e catture non riconoscono gli avversari andando oltre
+	
+	
 
 
 
@@ -10,3 +13,4 @@ Risolti:
 	7/7 Cavallo mangia tutti (alleati)
 	Bug nei movimenti di alcuni pezzi (checkO)
 	10/7   	pedoni non catturano
+	Highlight cancella gli avversari sulla sua via
