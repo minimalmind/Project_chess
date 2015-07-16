@@ -610,7 +610,7 @@ function possibleMovesSwitcher(rowSource, columnSource, idDrag, highlight)
 		}
 	}
 	//king
-	if ($("#"+idDrag).find("img").attr("class") == "queen")
+	if ($("#"+idDrag).find("img").attr("class") == "king")
 	{
 		//vertical
 		for (i = -1; i <= 1; i++)
@@ -771,14 +771,14 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 }
 
 //Allow the drop of the kings
-function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, justHighlight, checkKingUnderAttack) //TO EDIT
+function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, justHighlight) //TO EDIT
 {
 	allowDrop = false;
 
 	nMoves = 1;
 	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true, justHighlight))
 		allowDrop = true;
-	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight))
+	if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight))
 		allowDrop = true;
 	
 	return allowDrop;
@@ -935,16 +935,6 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 		return true;
 	if (obstacleValue != undefined)
 	{
-		if (checkKingUnderAttack)
-		{
-			if (obstacleClass == "king")
-			{
-				console.log("re sotto attacco verticale o orizzontale");
-				return false;
-			}
-		}
-		else
-		{
 			if (justHighlight == false)
 			{
 				capturePiece(obstacleID);
@@ -953,8 +943,6 @@ function supportObstacle(rowObstacle, columnObstacle, rowDest, columnDest, myVal
 				registerSimpleMove(rowDest, columnDest,rowSource, columnSource, true);
 				return false;
 			}
-
-		}
 	}
 	if (justHighlight == false)
 	{
