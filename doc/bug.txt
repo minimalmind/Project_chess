@@ -1,6 +1,7 @@
 Non risolti:
 
 	Cavallo si autospedisce nel cimitero
+	Highlight cancella gli avversari sulla sua via
 
 
 
