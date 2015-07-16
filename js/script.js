@@ -187,21 +187,20 @@ function createCell(cellAppendTo, cellClass, id)
     cell.addClass(cellClass);
     $(cellAppendTo).append(cell);
 
-    //setting the hover only on the trasparent layer
+    //setting the hover only on the first coloured layer
     var pID = id.substring(1,3);
-    
     if (id.substring(0,1) == "d")
     {
 	    $("#"+pID).hover(function ()
 	    {
 	    	if ($("#"+pID).children().find("img").attr("class") != undefined)
 	    	{
-
+	    		//wait 1 second to highlight the possible moves
 	    		timer = setInterval(function(){ 
+	    			//can the cell be highlighted?
 	    			allowHighlight = checkPiece(allowHighlight, id, "", true); 
 	    			if (allowHighlight)
 	    			{
-	    				$("#"+id).effect("highlight");
 	    				clearInterval(timer);
 	    			}
 	    			else
@@ -274,6 +273,7 @@ function supportAsignCellImage(i, j, color, piece)
 		$("#d"+i+""+j).find("img").attr("value",color);
 }
 
+//Second step to start the game: set the parameters of the match
 function showIntroPageOptions()
 {
 	$("#intro-page").hide();
@@ -457,6 +457,7 @@ function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 {
 	var rowDrag = idDrag.substring(1,2);
 	var columnDrag =  idDrag.substring(2,3);
+	//It's about highlighting (mouse over)
 	if (justHighlight == true)
 	{
 		var allowHighlight = false;
@@ -467,6 +468,7 @@ function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 
 		return allowHighlight;
 	}
+	//It's about dropping (drag the piece)
 	else
 	{
 		var rowDrop =  idDrop.substring(0,1);
@@ -497,6 +499,7 @@ function checkPiece(allowDrop, idDrag, idDrop, justHighlight)
 }	
 
 //*********************************************************************TO OPTIMIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Function which switch the piece and try to verify if there is an obstacle in any direction the piece could go
 function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 {
 	var rowDrag = idDrag.substring(1,2);
@@ -512,8 +515,7 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 			supportCheckHighlight(rowSource, columnSource, -2, 0);
 		if (checkWhitePawnsMoves(rowDrag, (rowSource - 2), columnDrag, (columnSource), allowHighlight, true))
 			supportCheckHighlight(rowSource, columnSource, -2, 0);
-
-		//capturing
+		//capturing moves
 		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource - 1), allowHighlight, true))
 			supportCheckHighlight(rowSource, columnSource, -1, -1);
 		if (checkWhitePawnsMoves(rowDrag, (rowSource - 1), columnDrag, (columnSource +1), allowHighlight, true))
@@ -659,6 +661,7 @@ function checkHighlight(rowSource, columnSource, allowHighlight, idDrag)
 	}
 }
 
+//Function which actually highlight the selected cell
 function supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns)
 {
 	var rowH = parseInt(rowSource);
@@ -669,11 +672,17 @@ function supportCheckHighlight(rowSource, columnSource, deltaRows, deltaColumns)
 	rowH += dRowH;
 	colH += dColH;
 
-	if  (rowH >= 0 && rowH <= 7 && colH >= 0 && colH <= 7 )
+	//finding my color
+	myColor = $("#d"+rowSource+columnSource).find("img").attr("value");
+	//just highlight the player who is playing now
+	if (myColor == nowPlaying)
 	{
-		var idHighlight = "#d" + rowH + "" + colH;
-		$(idHighlight).effect("highlight");
-		allowHighlight = true;
+		if  (rowH >= 0 && rowH <= 7 && colH >= 0 && colH <= 7 )
+		{
+			var idHighlight = "#d" + rowH + "" + colH;
+			$(idHighlight).effect("highlight");
+			allowHighlight = true;
+		}
 	}
 }
 
