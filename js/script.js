@@ -1030,7 +1030,7 @@ function supportDestination(rowNow, columnNow, rowDest, columnDest, justKingChec
 			idDest = "#d" + rowNow + "" + columnNow;
 			if ($(idDest).find("img").attr("class") == "king")
 			{
-				alert("re sotto scacco!");
+				$(idDest).effect("highlight", {color: '#F44336'}, 3000)
 					return true;
 			}
 			return false;
