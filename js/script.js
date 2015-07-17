@@ -1255,6 +1255,7 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 				supportDestination((rowSource - deltaRows), (columnSource - deltaColumns), rowDest, columnDest, true);
 				return true;
 			}
+			return true;
 				
 		}	
 		else if (obstacleValue == undefined)
@@ -1264,6 +1265,7 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 				registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
 				return true;
 			}
+			return true;
 		}
 	}	
 	return false;

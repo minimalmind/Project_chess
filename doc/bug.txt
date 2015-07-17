@@ -1,8 +1,6 @@
 Non risolti:
 
-	Cavallo si autospedisce nel cimitero (risolto?)
-	Non sono suggerite le mosse dei re
-	Suggerimenti e catture non riconoscono gli avversari andando oltre
+	Non sono suggerite le mosse del cavallo
 	
 	
 

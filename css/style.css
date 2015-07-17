@@ -16,7 +16,7 @@
 
 .main
 {
-  background-color: #9E9E9E; 
+  background-color: #BDBDBD; 
 }
 
 #main-board
@@ -36,7 +36,7 @@
 	position: relative;
 	vertical-align: middle;
 	display: inline-block;
-	background-color: #302013;
+	background-color: #616161;
 	color: white;
   vertical-align: middle;
   margin-top: 0 auto;
@@ -59,7 +59,7 @@
 	position: relative;
 	vertical-align: middle;
 	display: inline-block;
-	background-color: #F5F5DC;
+	background-color: #EEEEEE;
 }
 
 
