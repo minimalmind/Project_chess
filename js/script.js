@@ -9,6 +9,7 @@ var buffer;
 
 var isHighlighting = false;
 var Interval;
+var chrono;
 
 $(document).ready(function()
 {
@@ -28,6 +29,10 @@ $(document).ready(function()
 		if (playerName2 == "")
 			playerName2 = "Player 2";
 		alert("Benvenuti: "+playerName1+" e "+playerName2);
+
+		//Fill the stats table
+		$("#playerOne-Name").html(playerName1);
+		$("#playerTwo-Name").html(playerName2);
 
 		showIntroPageOptions();
 	});
@@ -291,6 +296,8 @@ function gameStart()
 	$("#header-title").addClass("header-title-min");
 	$("#whoisplaying-table-name").html(playerName1);
 
+
+
 	//Creation of the chess boards 
 	createBoard();
 	//Set the function drag on the chess set
@@ -298,6 +305,8 @@ function gameStart()
 	setDrop();
 	//Init the timer
 	manageTimer();
+	//Manage chronometer
+	manageChrono();
 	//Play simbol in the title
 	document.title = "\u25B6 Project Chess";
 }
@@ -311,6 +320,7 @@ function gameConfig()
   		isRotable = false;
 	else
 		isRotable = true;
+
 }
 
 //Function which enable (or not) tbe timer
@@ -1015,7 +1025,6 @@ function checkDestination(rowSource, rowDest, columnSource, columnDest, destinat
 //Is it the right spot? ok make the move
 function supportDestination(rowNow, columnNow, rowDest, columnDest, justKingChecking)
 {
-	//console.log(justKingChecking);
 	if (!justKingChecking)
 	{
 		if (rowNow == rowDest && columnNow == columnDest)									
@@ -1026,7 +1035,6 @@ function supportDestination(rowNow, columnNow, rowDest, columnDest, justKingChec
 	{
 		if (rowNow <= 8 && rowNow >= 0 && columnNow <= 8 && columnNow >= 0)
 		{
-			console.log("dest: "+rowNow+"-"+columnNow);
 			idDest = "#d" + rowNow + "" + columnNow;
 			if ($(idDest).find("img").attr("class") == "king")
 			{
@@ -1060,7 +1068,6 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 	//up left
 		if (columnSource > columnDest && rowSource > rowDest)
 		{
-			//console.log(rowDest + "-" + columnDest);
 			if (isObstacolatedOblique(rowSource, rowDest, columnSource, columnDest, "ul", i, myValue, myClass, justHighlight, justKingChecking))
 				safetyReturn = false;
 			else
@@ -1245,7 +1252,6 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 			}
 			else if (justKingChecking == true)
 			{
-				console.log((rowSource - deltaRows)+"-"+(columnSource - deltaColumns)+"-"+rowDest+""+columnDest);
 				supportDestination((rowSource - deltaRows), (columnSource - deltaColumns), rowDest, columnDest, true);
 				return true;
 			}
@@ -1269,17 +1275,39 @@ function minimizeHorse(deltaRows, deltaColumns, rowSource, rowDest, columnSource
 function capturePiece(idCaptured)
 {
 	if ($(idCaptured).find("img").attr("class") == "king")
-		alert("Fine partita");
+	{
+		alert("Fine partita");	
+		alert("Clicca OK per iniziare una nuova partita!");	
+		location.reload();
+	}
+		
 }
 
 //Function which send the captured piece to the right graveyard
 function appendToGraveyard(id)
 {
 	var value = ($(id).find("img").attr("value"));
+	var piecesCaptured;
+
 	if (value == "white")
+	{
 		$("#black-graveyard").append(($(id).find("img")));
+		piecesCaptured = parseInt($("#playerTwo-TotalCapturedPiece").html());
+		piecesCaptured += 1;
+		piecesCaptured = $("#playerTwo-TotalCapturedPiece").html(piecesCaptured);
+		console.log(piecesCaptured);
+
+	}
+		
 	else if (value == "black")
-		$("#white-graveyard").append(($(id).find("img")));
+	{
+		$("#white-graveyard").append(($(id).find("img")));	
+		piecesCaptured = parseInt($("#playerOne-TotalCapturedPiece").html());
+		piecesCaptured += 1;
+		piecesCaptured = $("#playerOne-TotalCapturedPiece").html(piecesCaptured);
+		console.log(piecesCaptured);
+	}
+		
 }
 
 //**************************************************************************************WORK IN PROGRESS********************************************************
@@ -1363,6 +1391,50 @@ function identifyPiece(id)
 	}
 	return retVal;
 }
+
+function manageChrono()
+{
+	timeString = "00:00";
+	chrono = setInterval(function() 
+	{
+	    startChrono();
+	},1000);
+}
+
+//Misura il tempo e lo stampa
+function startChrono()
+{
+    var minutesDonzens = parseInt(timeString.charAt(0));
+    var minutesUnits = parseInt(timeString.charAt(1));
+  	var  separatoreMinSec = ":";
+    var secondsDonzens = parseInt(timeString.charAt(3));
+    var secondsUnits = parseInt(timeString.charAt(4));
+                if(secondsUnits >= 9) {
+                    secondsUnits = 0;
+                    if(secondsDonzens >= 5) {
+                        secondsDonzens = 0;
+                        if(minutesUnits >= 9) {
+                            minutesUnits = 0;
+                            if(minutesDonzens >= 9)
+                                clearInterval(chrono);
+                            else
+                                minutesDonzens++;
+                        }
+                        else
+                            minutesUnits++;
+                    }
+                    else
+                        secondsDonzens++;
+                }
+                else
+                    secondsUnits++;
+        //Stampo il tempo
+        timeString = String(minutesDonzens) + String(minutesUnits) + String(separatoreMinSec) + String(secondsDonzens) + String(secondsUnits);
+        for ( i = 0; i < timeString.length; i++ ) {
+            $("#s" + i).html(timeString.charAt(i))
+        }
+}
+
 
 //*****************************DOESNT WORK**************************
 /*function manageRotation()
