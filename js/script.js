@@ -11,6 +11,8 @@ var isHighlighting = false;
 var Interval;
 var chrono;
 
+var kingPossiblePositions[];
+
 $(document).ready(function()
 {
 	//Initialize the project
@@ -285,6 +287,8 @@ function showIntroPageOptions()
 	$("#intro-page-options").show();
 }
 
+
+
 //Initialize the game
 function gameStart()
 {
@@ -327,9 +331,9 @@ function gameConfig()
 function manageTimer()
 {
 	var runTime;
-	if (selectedTimerMode == "Timer1")
+	if (selectedTimerMode == "Timer 1")
  	 	runTime = 60;
-	else if (selectedTimerMode == "Timer2")
+	else if (selectedTimerMode == "Timer 2")
  	 	runTime = 120;
 	if (selectedTimerMode != "Senza timer")
 	{
@@ -586,7 +590,7 @@ function possibleMovesSwitcher(rowSource, columnSource, idDrag, highlight, justK
 			switcher(highlight, rowSource, columnSource, 2, 0);
 
 		//capturing
-		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource + 1), allow, highlight, justKingChecking))
+		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource - 1), allow, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 1, -1);
 		if (checkWhitePawnsMoves(rowDrag, (rowSource + 1), columnDrag, (columnSource +1), allow, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 1, 1);
@@ -697,22 +701,22 @@ function possibleMovesSwitcher(rowSource, columnSource, idDrag, highlight, justK
 	//horse (special moces)
 	if ($("#"+idDrag).find("img").attr("class") == "horse")
 	{
-		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource - 1), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource - 2), columnDrag, (columnSource - 1), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, -2, -1);
-		if (checkHorseO(rowDrag, (rowSource - 2), columnDrag, (columnSource +1), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource - 2), columnDrag, (columnSource +1), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, -2, 1);
-		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource + 1), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource + 2), columnDrag, (columnSource + 1), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 2, 1);
-		if (checkHorseO(rowDrag, (rowSource + 2), columnDrag, (columnSource -1), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource + 2), columnDrag, (columnSource -1), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 2, -1);
 
-		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource +2), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource + 1), columnDrag, (columnSource +2), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 1, 2);
-		if (checkHorseO(rowDrag, (rowSource + 1), columnDrag, (columnSource - 2), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource + 1), columnDrag, (columnSource - 2), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, 1, -2);
-		if (checkHorseO(rowDrag, (rowSource - 1), columnDrag, (columnSource +2), 4, highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource - 1), columnDrag, (columnSource +2), 4, highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, -1, 2);
-		if (checkHorseO(rowDrag, (rowSource-1), columnDrag, (columnSource-2), 4,highlight, justKingChecking))
+		if (checkHorseOblique(rowDrag, (rowSource-1), columnDrag, (columnSource-2), 4,highlight, justKingChecking))
 			switcher(highlight, rowSource, columnSource, -1, -2);
 	}
 }
@@ -757,7 +761,7 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		nMoves = 2;
 		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false, justHighlight, justKingChecking))
 			allowDrop = true;
-		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+		else if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 			allowDrop = true;
 	}
 	//if it isn't the 1st move
@@ -766,7 +770,7 @@ function checkWhitePawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		nMoves = 1;
 		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, false, false, false, justHighlight, justKingChecking))
 			allowDrop = true;
-		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+		else if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 			allowDrop = true;
 	}
 
@@ -786,7 +790,7 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		nMoves = 2;
 		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, false, true, false, false, justHighlight, justKingChecking))
 			allowDrop = true;
-		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+		else if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 			allowDrop = true;
 	}
 	//if it isn't the 1st move
@@ -795,7 +799,7 @@ function checkBlackPawnsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDro
 		nMoves = 1;
 		if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, false, true, false, false, justHighlight, justKingChecking))
 			allowDrop = true;
-		else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+		else if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 			allowDrop = true;
 	}
 	
@@ -810,7 +814,7 @@ function checkKingsMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, ju
 	nMoves = 1;
 	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true, justHighlight, justKingChecking))
 		allowDrop = true;
-	if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+	if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 		allowDrop = true;
 	
 	return allowDrop;
@@ -820,7 +824,7 @@ function checkBishopMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, j
 {
 	allowDrop = false;
 	nMoves = 8;
-	if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+	if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 		allowDrop = true;
 
 	return allowDrop;
@@ -839,12 +843,11 @@ function checkTowersMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, j
 
 function checkQueensMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, justHighlight, justKingChecking)
 {
-	console.log(justKingChecking);
 	allowDrop = false;
 	nMoves = 8;
 	if (checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, true, true, true, true, justHighlight, justKingChecking))
 		allowDrop = true;
-	else if (checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+	else if (checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 		allowDrop = true;
 
 	return allowDrop;
@@ -854,7 +857,7 @@ function checkHorsesMoves(rowDrag, rowDrop, columnDrag, columnDrop, allowDrop, j
 {
 	allowDrop = false;
 	nMoves = 4;
-	if (checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
+	if (checkHorseOblique(rowDrag, rowDrop, columnDrag, columnDrop, nMoves, justHighlight, justKingChecking))
 		allowDrop = true;
 
 	return allowDrop;
@@ -872,10 +875,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 	var columnSource = parseInt(columnDrag);
 	var columnDest = parseInt(columnDrop);
 
-	console.log(justKingChecking);
-	if (justKingChecking)
-		console.log(rowSource+""+columnSource+"-"+rowDest+""+columnDest);
-	
 	//find my color
 	var myValue = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("value"));
 	var myClass = ($("#d"+(rowSource)+""+(columnSource)).find("img").attr("class"));
@@ -890,7 +889,6 @@ function checkMoveO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, canG
 				safetyReturn = false;
 			else
 			{
-				//console.log(rowDest + "-" + columnDest);
 				if (checkDestination(rowSource, rowDest, columnSource, columnDest, "up", i, justKingChecking))
 					return true;
 			}			
@@ -1049,7 +1047,7 @@ function supportDestination(rowNow, columnNow, rowDest, columnDest, justKingChec
 /*
 * Function that unify the oblique controls      ************************************************************unify check obstacle, check destination!
 */
-function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, justHighlight, justKingChecking)
+function checkMoveOblique(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, justHighlight, justKingChecking)
 {
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
@@ -1060,7 +1058,6 @@ function checkMoveObliqueO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMove
 	var safetyReturn = true;
 
 	i = 1;
-//--
 	while (i <= howManyMoves)
 	{
 	//all the pieces calling this functions can go up
@@ -1155,25 +1152,30 @@ function supportObstacleOblique(rowObstacle, columnObstacle, rowDest, columnDest
 
 	if (obstacleValue == myValue)		
 		return true;
+	if (obstacleClass == undefined && (myClass == "white-pawn" || myClass == "black-pawn") && justHighlight == true)
+	{
+		return true;
+	}
+		
 	if (obstacleValue == undefined && (myClass == "white-pawn" || myClass == "black-pawn"))
 		return true;	
 
-		if (justHighlight == false && justKingChecking == false)
-		{	
-			if (obstacleValue != undefined)
-			{
-				capturePiece(obstacleID);
-				appendToGraveyard(obstacleID);
-				
-				registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
-				return false;
-				
-			}
-			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
+	if (justHighlight == false && justKingChecking == false)
+	{	
+		if (obstacleValue != undefined)
+		{
+			capturePiece(obstacleID);
+			appendToGraveyard(obstacleID);
+			
+			registerSimpleMove(rowDest, columnDest, rowSource, columnSource, true);
 			return false;
-		}	
-		else
-			return false;
+			
+		}
+		registerSimpleMove(rowDest, columnDest, rowSource, columnSource, false);
+		return false;
+	}	
+
+	return false;
 }
 
 //First function which detect the destination
@@ -1204,7 +1206,7 @@ function checkDestinationOblique(rowSource, rowDest, columnSource, columnDest, d
 /*
 *	The horse have a particular system of moving, have to use a different function
 */
-function checkHorseO(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, justHighlight, justKingChecking)
+function checkHorseOblique(rowDrag, rowDrop, columnDrag, columnDrop, howManyMoves, justHighlight, justKingChecking)
 {	
 	var rowSource = parseInt(rowDrag);
 	var rowDest = parseInt(rowDrop);
@@ -1297,8 +1299,6 @@ function appendToGraveyard(id)
 		piecesCaptured = parseInt($("#playerTwo-TotalCapturedPiece").html());
 		piecesCaptured += 1;
 		piecesCaptured = $("#playerTwo-TotalCapturedPiece").html(piecesCaptured);
-		console.log(piecesCaptured);
-
 	}
 		
 	else if (value == "black")
@@ -1307,9 +1307,7 @@ function appendToGraveyard(id)
 		piecesCaptured = parseInt($("#playerOne-TotalCapturedPiece").html());
 		piecesCaptured += 1;
 		piecesCaptured = $("#playerOne-TotalCapturedPiece").html(piecesCaptured);
-		console.log(piecesCaptured);
 	}
-		
 }
 
 //**************************************************************************************WORK IN PROGRESS********************************************************
@@ -1336,13 +1334,13 @@ function registerSimpleMove(rowDrop, columnDrop, rowSource, columnSource, captur
 }
 
 
-//Function that publish the move saved
+//Function that publish the move saved // moves history
 function publishMove()
 {
 	$("#slider").append("<p>"+buffer+"<\p>");
 }
 
-//Function that helps me to find the x and y official alias for the coordinates
+//Function that helps me to find the x and y official alias for the coordinates // moves history
 function findCoordinates(row, column)
 {
 	var cX, cY, coordinates = "";

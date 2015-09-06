@@ -578,7 +578,7 @@ display: block;
 .example-table th {
 background-color: #616161;
 font-weight: normal;
-color: #fff;
+color: rgb(238, 238, 238);
 padding: 20px 30px;
 text-align: center;
 }
@@ -597,7 +597,7 @@ color: rgb(111, 111, 111);
 }
 #white-graveyard
 {
-  border: 2px solid white;
+  border: 2px solid #EEEEEE;
   min-height: 200px;
   width: 400px;
   overflow: auto;
@@ -623,7 +623,7 @@ color: rgb(111, 111, 111);
 
 
   font-family: 'Open Sans', sans-serif; 
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 300; 
   line-height: 32px;
   padding-top: 5%;

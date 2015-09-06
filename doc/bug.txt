@@ -1,7 +1,6 @@
 Non risolti:
 
-	Non sono suggerite le mosse del cavallo
-	
+	Highlight dà dei problemi quando vi è un pezzo da catturare (es pedone), viene illuminata anche la casella “vicina”
 	
 
 
@@ -12,3 +11,5 @@ Risolti:
 	Bug nei movimenti di alcuni pezzi (checkO)
 	10/7   	pedoni non catturano
 	Highlight cancella gli avversari sulla sua via
+	Non sono suggerite le mosse del cavallo
+	
