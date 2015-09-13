@@ -11,7 +11,7 @@ var isHighlighting = false;
 var Interval;
 var chrono;
 
-var kingPossiblePositions[];
+//var kingPossiblePositions[];
 
 $(document).ready(function()
 {
